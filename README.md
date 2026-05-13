@@ -1,5 +1,11 @@
 # Agentic AI Learning progress
 
+## Workshop deck (AI → ML → LLMs)
+
+- **Slides:** [presentations/ai_ml_journey/index.html](presentations/ai_ml_journey/index.html) — open in a browser or run `python3 -m http.server` from that folder (see comments at top of [presentations/ai_ml_journey/FACILITATOR.md](presentations/ai_ml_journey/FACILITATOR.md)).
+- **Facilitator pacing & labs:** [presentations/ai_ml_journey/FACILITATOR.md](presentations/ai_ml_journey/FACILITATOR.md)
+- **Slide media licensing:** [presentations/ai_ml_journey/ATTRIBUTIONS.md](presentations/ai_ml_journey/ATTRIBUTIONS.md) — keep rows accurate if you swap images; respect each source’s license.
+
 ## Task 1: Create a marks dataset
 
 We keep a small CSV of **20 students** with marks for **science**, **maths**, **social_science**, **Tamil**, and **english**.

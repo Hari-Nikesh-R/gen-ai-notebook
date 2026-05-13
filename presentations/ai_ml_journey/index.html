@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI → ML → LLMs — workshop deck</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+    <link rel="stylesheet" href="deck.css" />
+  </head>
+  <body class="anim-deck">
+    <div class="orb orb-a" aria-hidden="true"></div>
+    <div class="orb orb-b" aria-hidden="true"></div>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>From “AI” to LLMs</h1>
+          <p class="subtitle">A colorful, beginner-friendly journey — with hands-on labs along the way.</p>
+          <p class="fragment">We’ll connect everyday apps → machine learning → deep learning → generative AI → tokens &amp; transformers.</p>
+          <aside class="notes">Welcome. Pacing and breaks live only in FACILITATOR.md — not on slides.</aside>
+        </section>
+
+        <section>
+          <span class="tag tag-ai">Hook</span>
+          <h2>Models are already everywhere</h2>
+          <div class="media-row">
+            <figure class="slide-media ken-burns">
+              <img class="concept-hero" src="assets/images/unsplash_laptop.jpg" alt="Person typing on a laptop" loading="lazy" />
+            </figure>
+            <figure class="slide-media ken-burns">
+              <img class="concept-hero" src="assets/images/unsplash_keyboard.jpg" alt="Close-up of a keyboard" loading="lazy" />
+            </figure>
+            <figure class="slide-media ken-burns">
+              <img class="concept-hero" src="assets/images/unsplash_smartphone.jpg" alt="Hands holding a smartphone" loading="lazy" />
+            </figure>
+          </div>
+          <p class="fragment">If it ranks, routes, completes, recommends, or blocks spam — there’s usually a <strong>model</strong> behind the curtain.</p>
+          <aside class="notes">Point at the collage: laptops, phones, maps — all fair examples before defining terms.</aside>
+        </section>
+
+        <section>
+          <span class="tag tag-ai">Hook</span>
+          <h2>Today’s thread</h2>
+          <ul>
+            <li class="fragment">What “AI” means (wide umbrella)</li>
+            <li class="fragment">What makes <strong>machine learning</strong> different from fixed rules</li>
+            <li class="fragment">What a <strong>saved model</strong> is in practice</li>
+            <li class="fragment">Why <strong>deep learning</strong> and <strong>generative AI</strong> exploded recently</li>
+            <li class="fragment">How <strong>LLMs</strong> relate to tokens + next-token prediction</li>
+          </ul>
+        </section>
+
+        <section class="lab">
+          <span class="tag tag-lab">Hands-on</span>
+          <h2>Lab A — “AI or not?” sort</h2>
+          <p><strong>Goal:</strong> separate mostly-rules vs mostly-learned systems.</p>
+          <ul>
+            <li><strong>Materials:</strong> sticky notes or a whiteboard column for each category.</li>
+            <li><strong>Repo:</strong> none — discussion only.</li>
+            <li><strong>Done when:</strong> the room agrees “learned from data + feedback” is the hallmark of ML.</li>
+          </ul>
+          <aside class="notes">Use traffic lights, thermostats, spam filters, face grouping, chat assistants as prompt cards.</aside>
+        </section>
+
+        <section>
+          <span class="tag tag-lab">Lab A</span>
+          <h2>Example: traffic lights</h2>
+          <figure class="slide-media tight">
+            <img
+              class="concept-hero"
+              src="assets/images/traffic_light.gif"
+              data-static-src="assets/images/traffic_light_static.svg"
+              alt="Animated traffic signal lamp"
+              width="149"
+              height="250"
+            />
+            <figcaption class="fragment">Timers and phase plans are mostly <strong>rules + sensors</strong> — useful contrast before spam filters and recommender systems.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-ai">Chapter 2</span>
+          <h2>Artificial intelligence (wide lens)</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/unsplash_collaboration.jpg" alt="People collaborating at a laptop" loading="lazy" />
+            <figcaption class="fragment">AI: systems that <strong>perceive</strong>, <strong>decide</strong>, and <strong>act</strong> — with humans in the loop or not.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-ai">Chapter 2</span>
+          <h2>Two families you’ll hear about</h2>
+          <div class="callout">
+            <ul>
+              <li class="fragment"><strong>Rule-heavy:</strong> explicit if-this-then-that logic (great when requirements are stable).</li>
+              <li class="fragment"><strong>Data-heavy (ML):</strong> behavior is shaped by examples, evaluation, and iteration.</li>
+              <li class="fragment">Real products often mix both — the question is <em>where the uncertainty lives</em>.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <span class="tag tag-ml">Chapter 3</span>
+          <h2>The machine learning loop</h2>
+          <figure class="slide-media tight">
+            <img class="concept-hero" src="assets/images/neural_network.svg" alt="Diagram of nodes and edges in a small neural network" />
+            <figcaption class="fragment">Start simple: <strong>data → train → predict</strong>. The diagram is a cartoon “function with knobs” — we’ll deepen it in deep learning.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-ml">Chapter 3</span>
+          <h2>Train vs test (intuition)</h2>
+          <ul>
+            <li class="fragment"><strong>Training:</strong> adjust internal knobs to fit examples you’re allowed to learn from.</li>
+            <li class="fragment"><strong>Testing / held-out:</strong> check behavior on fresh examples you didn’t train on.</li>
+            <li class="fragment">If you only ever grade on homework you memorized, you don’t know if you <em>generalize</em>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-ml">Chapter 3</span>
+          <h2>Overfitting (one slide)</h2>
+          <p class="callout">A model can become <strong>too faithful</strong> to training quirks — great on yesterday’s data, brittle tomorrow. Regularization, more diverse data, and honest evaluation help.</p>
+        </section>
+
+        <section class="lab">
+          <span class="tag tag-lab">Hands-on</span>
+          <h2>Lab B — “Guess the rule”</h2>
+          <p><strong>Goal:</strong> feel why a held-out set matters.</p>
+          <ul>
+            <li>Facilitator presents 5–8 toy labeled examples (words, emojis, silly patterns).</li>
+            <li>Groups propose a rule, then see <strong>held-out</strong> cases meant to break naive rules.</li>
+            <li><strong>Done when:</strong> learners can name <em>training set</em>, <em>hypothesis</em>, and <em>why test matters</em>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-lab">Lab B</span>
+          <h2>Train / validation / test</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/train_validate_test.png" alt="Diagram comparing train-test split and train-validate-test split" loading="lazy" />
+            <figcaption class="fragment">Many teams reserve a <strong>validation</strong> slice for tuning, and keep a final <strong>test</strong> set untouched for realistic estimates.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-model">Chapter 4</span>
+          <h2>What we mean by “model”</h2>
+          <ul>
+            <li class="fragment"><strong>Architecture / family:</strong> the blueprint (what is wired to what).</li>
+            <li class="fragment"><strong>Weights / parameters:</strong> numbers learned from data — the “memory” of training.</li>
+            <li class="fragment"><strong>Artifact:</strong> the saved file(s) you version, deploy, and monitor.</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-model">Chapter 4</span>
+          <h2>Domain example — inbox &amp; spam</h2>
+          <figure class="slide-media tight">
+            <img class="concept-hero" src="assets/images/icon_spam.svg" alt="Spam email icon" width="256" height="256" />
+            <figcaption class="fragment">Classic supervised learning: labeled messages teach a boundary between ham and spam.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-model">Chapter 4</span>
+          <h2>Domain example — risk &amp; signals</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/matrix_code.jpg" alt="Abstract green characters suggesting digital data" loading="lazy" />
+            <figcaption class="fragment">Tabular models score risk, churn, or fraud from structured histories — not “matrix rain,” but the metaphor is <em>lots of fields</em>.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-model">Chapter 4</span>
+          <h2>Domain example — vision &amp; cameras</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/unsplash_smartphone.jpg" alt="Smartphone camera in use" loading="lazy" />
+            <figcaption class="fragment">Pixels in → labels or boxes out — same loop, different architecture families (CNNs, ViTs, …).</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-model">Chapter 4</span>
+          <h2>Domain example — recommendations</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/unsplash_creative.jpg" alt="Abstract flowing shapes suggesting many choices" loading="lazy" />
+            <figcaption class="fragment">Ranking “what’s next” pairs users, items, and context — overlaps with language modeling more than people expect.</figcaption>
+          </figure>
+        </section>
+
+        <section class="lab">
+          <span class="tag tag-lab">Hands-on</span>
+          <h2>Lab C — “Name the model” scavenger</h2>
+          <p><strong>Goal:</strong> for 2–3 apps: name <em>input</em>, <em>output</em>, and whether it’s <strong>generative</strong>.</p>
+          <ul>
+            <li>Optional twist: find one experience that is clearly <strong>next-step prediction</strong> (keyboard, IDE).</li>
+            <li><strong>Done when:</strong> pairs can explain one chain in plain language.</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-lab">Lab C</span>
+          <h2>Phones are full of tiny predictors</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/unsplash_smartphone.jpg" alt="People using smartphones" loading="lazy" />
+            <figcaption class="fragment">Keyboard suggestions, photo enhancement, voice typing — many discriminative models stacked together.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-dl">Chapter 5</span>
+          <h2>Deep learning</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/artificial_neural_network.png" alt="Layered artificial neural network diagram" loading="lazy" />
+            <figcaption class="fragment">“Deep” ≈ <strong>many parameterized layers</strong> — composable features instead of only hand-crafted rules.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-dl">Chapter 5</span>
+          <h2>Composable blocks (cartoon)</h2>
+          <div class="anim-layers" aria-label="Layered network blocks">
+            <div class="layer">Input representation</div>
+            <div class="layer">Hidden composition</div>
+            <div class="layer">More hidden composition</div>
+            <div class="layer">Output head</div>
+          </div>
+          <p class="fragment">This repo’s later labs turn <strong>text → tokens → vectors → attention</strong> inside those blocks.</p>
+        </section>
+
+        <section>
+          <span class="tag tag-dl">Chapter 5</span>
+          <h2>When depth shines</h2>
+          <figure class="slide-media tight">
+            <img
+              class="concept-hero"
+              src="assets/images/coloured_looming.gif"
+              data-static-src="assets/images/artificial_neural_network.png"
+              alt="Short looping color animation suggesting stacked activity"
+              width="300"
+              height="225"
+            />
+            <figcaption class="fragment">High-dimensional patterns (vision, speech, language) benefit from layered abstractions — paired with data and compute.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-gen">Chapter 6</span>
+          <h2>Generative AI</h2>
+          <div class="callout">
+            <ul>
+              <li class="fragment"><strong>Discriminative</strong> models lean toward labels, scores, or decisions.</li>
+              <li class="fragment"><strong>Generative</strong> models synthesize new samples in media space (text, images, audio, …).</li>
+              <li class="fragment">Responsible use still needs policy, testing, and human review — especially in high-stakes settings.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <span class="tag tag-gen">Chapter 6</span>
+          <h2>Side-by-side intuition</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/unsplash_creative.jpg" alt="Abstract creative gradient shapes" loading="lazy" />
+            <figcaption class="fragment">Generative tools propose <strong>new content</strong>; many products still wrap them with discriminative checks and UX guardrails.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-llm">Chapter 7</span>
+          <h2>Large language models</h2>
+          <ul>
+            <li class="fragment">Text is chunked into <strong>tokens</strong> (words, subwords, symbols).</li>
+            <li class="fragment">Training objective (simplified): predict a plausible <strong>next token</strong> given context.</li>
+            <li class="fragment">At inference: sample/decode repeatedly → paragraphs, code, plans.</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-llm">Chapter 7</span>
+          <h2>Tokenization (schematic)</h2>
+          <figure class="slide-media tight">
+            <svg class="concept-hero" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tokenization schematic" style="background: #f8fafc; max-height: 36vh">
+              <text x="32" y="42" font-family="Nunito, sans-serif" font-size="22" fill="#0f172a">Raw text</text>
+              <rect x="32" y="54" width="200" height="44" rx="8" fill="#e2e8f0" stroke="#94a3b8" />
+              <text x="48" y="82" font-family="monospace" font-size="16" fill="#334155">"Hello, world!"</text>
+              <path d="M250 76 H310" stroke="#64748b" stroke-width="3" marker-end="url(#arr)" />
+              <text x="330" y="42" font-family="Nunito, sans-serif" font-size="22" fill="#0f172a">Token IDs</text>
+              <rect x="330" y="54" width="280" height="44" rx="8" fill="#fef3c7" stroke="#f59e0b" />
+              <text x="346" y="82" font-family="monospace" font-size="16" fill="#92400e">[15496, 11, 1917, 0]</text>
+              <defs>
+                <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L8,3 L0,6 Z" fill="#64748b" />
+                </marker>
+              </defs>
+            </svg>
+            <figcaption class="fragment">Vocabulary maps pieces ↔ integers; special tokens handle unknowns and padding.</figcaption>
+            <p class="fragment" style="margin-top: 0.5rem; font-size: 0.9em; color: var(--muted, #5c5c72)">You’ll open real tokenizers in <code>day1_building_transformer/tokenizer/</code> during Lab D.</p>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-llm">Chapter 7</span>
+          <h2>Limits to name out loud</h2>
+          <ul>
+            <li class="fragment">Hallucination / plausible-but-wrong answers</li>
+            <li class="fragment">Knowledge cutoff &amp; missing private context</li>
+            <li class="fragment">Not a database — don’t treat outputs as ground truth without verification</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-llm">Chapter 7</span>
+          <h2>Transformer block (visual only)</h2>
+          <figure class="slide-media tight">
+            <svg class="concept-hero" viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Queries keys values cartoon" style="background: #fdf4ff; max-height: 34vh">
+              <rect x="40" y="40" width="120" height="64" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" />
+              <text x="100" y="80" text-anchor="middle" font-family="Nunito, sans-serif" font-size="18" fill="#5b21b6">Queries</text>
+              <rect x="200" y="40" width="120" height="64" rx="10" fill="#cffafe" stroke="#0891b2" stroke-width="2" />
+              <text x="260" y="80" text-anchor="middle" font-family="Nunito, sans-serif" font-size="18" fill="#155e75">Keys</text>
+              <rect x="360" y="40" width="120" height="64" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+              <text x="420" y="80" text-anchor="middle" font-family="Nunito, sans-serif" font-size="18" fill="#166534">Values</text>
+              <text x="40" y="150" font-family="Nunito, sans-serif" font-size="17" fill="#4b5563">
+                Attention routes information between tokens using compatibility of Q/K and content in V.
+              </text>
+            </svg>
+            <figcaption class="fragment">Pair with <code>day1_building_transformer/self_attention/README.md</code> after the conceptual pass.</figcaption>
+          </figure>
+        </section>
+
+        <section class="lab">
+          <span class="tag tag-lab">Hands-on</span>
+          <h2>Lab D — Tokenizer (code)</h2>
+          <ul>
+            <li><strong>Repo path:</strong> <code>day1_building_transformer/tokenizer/</code></li>
+            <li>Run <code>simple_tokenizer.py</code> or import <code>Tokenizer</code> on learner-provided sentences.</li>
+            <li><strong>Done when:</strong> padded encodings decode sensibly; learners explain <code>&lt;PAD&gt;</code> / <code>&lt;UNK&gt;</code> in their own words.</li>
+          </ul>
+          <aside class="notes">See FACILITATOR.md for PYTHONPATH / import tips.</aside>
+        </section>
+
+        <section>
+          <span class="tag tag-lab">Lab D</span>
+          <h2>Neutral terminal vibe</h2>
+          <figure class="slide-media">
+            <img class="concept-hero" src="assets/images/matrix_code.jpg" alt="Abstract code-like characters" loading="lazy" />
+            <figcaption class="fragment">Use your own terminal output for screenshots — avoid copyrighted IDE themes if unsure.</figcaption>
+          </figure>
+        </section>
+
+        <section>
+          <span class="tag tag-llm">Bridge</span>
+          <h2>From concepts to this repo</h2>
+          <pre><code class="hljs plaintext">Raw text
+  → Tokenizer (ids, padding)
+    → Embeddings (rows = tokens)
+      → Self-attention (Q/K/V)
+        → Blocks / LM head
+          → Next-token prediction</code></pre>
+          <p class="fragment callout">Extend experiments in <code>day1_building_transformer/</code> — tokenizer variants, embedding shapes, attention blocks.</p>
+        </section>
+
+        <section class="lab">
+          <span class="tag tag-lab">Hands-on</span>
+          <h2>Lab E — Embeddings</h2>
+          <ul>
+            <li><strong>Path:</strong> <code>day1_building_transformer/embeddings/</code> + README</li>
+            <li>Inspect embedding rows/columns with <code>np_embedding.py</code>.</li>
+            <li><strong>Done when:</strong> learners can say why networks need numbers, not raw strings.</li>
+          </ul>
+        </section>
+
+        <section class="lab">
+          <span class="tag tag-lab">Hands-on</span>
+          <h2>Lab F — Self-attention</h2>
+          <ul>
+            <li><strong>Path:</strong> <code>day1_building_transformer/self_attention/</code> + README</li>
+            <li>Walk through Q/K/V intuition with the NumPy scratch steps.</li>
+            <li><strong>Done when:</strong> one disambiguation story (“it” → “bank”) uses context, not magic.</li>
+          </ul>
+        </section>
+
+        <section>
+          <span class="tag tag-ai">Capstone</span>
+          <h2>Nesting map</h2>
+          <div class="callout" style="font-size: 0.9em; line-height: 1.5">
+            <p><strong>AI</strong> (perceive / decide / act)</p>
+            <p style="margin-left: 1rem">⊃ <strong>Machine learning</strong> (fit from data)</p>
+            <p style="margin-left: 2rem">⊃ <strong>Deep learning</strong> (deep composable stacks)</p>
+            <p style="margin-left: 2rem">+ <strong>Generative</strong> branch (synthesize media)</p>
+            <p style="margin-left: 3rem">⊃ <strong>LLMs</strong> (language-scale autoregressive models)</p>
+          </div>
+          <p class="fragment">Pick one track to deepen next: tokenizer tricks, embedding experiments, or attention visualizations.</p>
+        </section>
+
+        <section>
+          <h2>Thank you / Q&amp;A</h2>
+          <p class="subtitle">Media credits: <code>ATTRIBUTIONS.md</code> in this folder.</p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        transition: "convex",
+        fragments: true,
+        controlsTutorial: true,
+        progress: true,
+        plugins: [RevealNotes, RevealHighlight],
+      });
+
+      function applyReducedMotionMedia() {
+        var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        if (!mq.matches) return;
+        document.querySelectorAll("video.concept-loop").forEach(function (v) {
+          v.removeAttribute("autoplay");
+          try {
+            v.pause();
+          } catch (e) {}
+        });
+        document.querySelectorAll("img[data-static-src]").forEach(function (img) {
+          var alt = img.getAttribute("alt");
+          if (img.dataset.staticSrc) {
+            img.src = img.dataset.staticSrc;
+          }
+          if (img.dataset.staticAlt) {
+            img.setAttribute("alt", img.dataset.staticAlt);
+          }
+        });
+      }
+
+      applyReducedMotionMedia();
+      window.matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", applyReducedMotionMedia);
+      Reveal.on("ready", applyReducedMotionMedia);
+      Reveal.on("slidechanged", applyReducedMotionMedia);
+    </script>
+  </body>
+</html>
