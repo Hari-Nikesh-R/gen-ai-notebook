@@ -112,7 +112,6 @@ Now that the words know who their best friends are, they share their **Values** 
 output = attention_weights @ V
 print("The final magic output:\n", output)
 ```
-
 And Ta-Da! 🎩✨ You just built the brain of a Magic Robot! Now the robot understands the words perfectly!
 
 ### 🗺️ The Robot's Magic Map:
