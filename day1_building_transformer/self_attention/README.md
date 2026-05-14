@@ -114,3 +114,18 @@ print("The final magic output:\n", output)
 ```
 
 And Ta-Da! 🎩✨ You just built the brain of a Magic Robot! Now the robot understands the words perfectly!
+
+### 🗺️ The Robot's Magic Map:
+```text
+Embeddings
+   ↓
+Q, K, V
+   ↓
+Attention Scores
+   ↓
+Softmax
+   ↓
+Weighted Sum
+   ↓
+Context-Aware Embeddings
+```
