@@ -134,3 +134,75 @@ Wv = np.random.rand(3, 3)
 
 Because `embedding dimension = 3`
 
+### STEP 4 — Compute Q, K, V
+
+Now transform embeddings.
+
+```python
+Q = embeddings @ Wq
+K = embeddings @ Wk
+V = embeddings @ Wv
+
+print("Q:\n", Q)
+print("\nK:\n", K)
+print("\nV:\n", V)
+```
+
+`@` means Matrix multiplication
+
+### STEP 5 - Compute attention Score
+#### Query compares with Keys
+
+This determines:
+how much attention to pay.
+
+```python
+scores = Q @ K.T
+
+print(scores)
+```
+
+#### What Is Happening?
+Every token compares with every other token.
+
+### STEP 6 : Scale Scores
+
+Transformer paper uses:
+![alt text](image.png)
+
+Why?
+
+To stabilize gradients.
+
+```python
+dk = K.shape[1]
+
+scaled_scores = scores / np.sqrt(dk)
+
+print(scaled_scores)
+```
+
+### STEP 7 Apply Softmax
+Softmax converts scores into **probabilities**
+
+```python
+def softmax(x):
+    
+    exp_x = np.exp(x)
+    
+    return exp_x / np.sum(exp_x, axis=1, keepdims=True)
+
+attention_weights = softmax(scaled_scores)
+
+print(attention_weights)
+```
+
+### STEP 8: Compute Final Attention Output
+
+Now use weights on Values.
+
+```python
+Output = attention_weights @ V
+
+print(output)
+```
