@@ -206,16 +206,3 @@ Output = attention_weights @ V
 
 print(output)
 ```
-
-
-Embeddings
-   ↓
-Q, K, V
-   ↓
-Attention Scores
-   ↓
-Softmax
-   ↓
-Weighted Sum
-   ↓
-Context-Aware Embeddings
