@@ -6,17 +6,18 @@ This file is the **only** place for wall-clock pacing, break suggestions, and co
 
 ## Suggested flow (full workshop)
 
-Order on the deck: **Hook → Lab A → AI → ML → Lab B → Models → Lab C → Deep learning → Generative AI → LLMs → Lab D → Bridge → Lab E → Lab F → Capstone.**
+Order on the deck: **Hook → Lab A → AI (Ch.2) → ML (Ch.3) → Deep learning (Ch.4) → Generative AI (Ch.5) → LLMs (Ch.6) → Lab C (tokenizer) → Bridge → Lab D (embeddings) → Lab E (self-attention) → Capstone.**
 
-- **Morning block:** Hook through Lab B or C, depending on group speed. Build vocabulary on “rules vs data” before code.
+- **Morning block:** Hook through Lab A and the ML chapter (or into the deep-learning intro), depending on group speed. Build vocabulary on “rules vs data” before code.
+- **Lab A (in-deck):** Learners use **two “Sort on screen” slides** (part 1: scenarios 1–4, part 2: 5–7). The progress bar and **Clear picks** stay in sync across both. Budget ~6–8 minutes total for pairs, then **one** full-group pass comparing disagreements before opening the **“Debrief”** `<details>` blocks. Clicks on those controls are wired so they do not advance Reveal accidentally.
 - **Short break** after a natural lab close (not printed on slides).
-- **Afternoon block:** Labs D–F in `day1_building_transformer/` with live demos; capstone nesting as the closing frame.
+- **Afternoon block:** Labs C–E in `day1_building_transformer/` with live demos; capstone nesting as the closing frame.
 
 ## Optional shorten paths
 
-- **Tight on time:** Shorten Lab A discussion; keep one generative vs discriminative example in Lab C only.
-- **Defer advanced code:** Run Lab D (tokenizer) fully; summarize embeddings (Lab E) with one matrix inspection; demo attention (Lab F) from facilitator machine only.
-- **Non-coders in the room:** Emphasize Labs A–C; pair each table with one driver for D–F while others observe and take notes.
+- **Tight on time:** Shorten Lab A discussion; trim one generative-AI or LLM vertical instead of rushing the code labs.
+- **Defer advanced code:** Run Lab C (tokenizer) fully; summarize embeddings (Lab D) with one matrix inspection; demo attention (Lab E) from facilitator machine only.
+- **Non-coders in the room:** Emphasize Lab A and the concept chapters; pair each table with one driver for Labs C–E while others observe and take notes.
 
 ## Prerequisites
 
@@ -25,7 +26,7 @@ Order on the deck: **Hook → Lab A → AI → ML → Lab B → Models → Lab C
 
 ## Room logistics
 
-- Decide early: **one shared demo** vs **everyone runs locally**. For everyone-local, budget setup time before Lab D.
+- Decide early: **one shared demo** vs **everyone runs locally**. For everyone-local, budget setup time before Lab C.
 - Pre-flight: run `tokenizer/simple_tokenizer.py` (or import `Tokenizer`) on a quirky sentence with punctuation and mixed case.
 
 ## Troubleshooting (code labs)

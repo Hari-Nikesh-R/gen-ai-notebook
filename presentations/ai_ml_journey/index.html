@@ -15,7 +15,6 @@
       <div class="slides">
         <section>
           <h1>From “AI” to LLMs</h1>
-          <p class="subtitle">A colorful, beginner-friendly journey — with hands-on labs along the way.</p>
           <p class="fragment">We’ll connect everyday apps → machine learning → deep learning → generative AI → tokens &amp; transformers.</p>
           <aside class="notes">Welcome. Pacing and breaks live only in FACILITATOR.md — not on slides.</aside>
         </section>
@@ -53,30 +52,243 @@
         <section class="lab">
           <span class="tag tag-lab">Hands-on</span>
           <h2>Lab A — “AI or not?” sort</h2>
-          <p><strong>Goal:</strong> separate mostly-rules vs mostly-learned systems.</p>
-          <ul>
-            <li><strong>Materials:</strong> sticky notes or a whiteboard column for each category.</li>
-            <li><strong>Repo:</strong> none — discussion only.</li>
-            <li><strong>Done when:</strong> the room agrees “learned from data + feedback” is the hallmark of ML.</li>
-          </ul>
-          <aside class="notes">Use traffic lights, thermostats, spam filters, face grouping, chat assistants as prompt cards.</aside>
+          <p style="font-size:1.25em;"><strong>Goal:</strong> label each system <strong>mostly rules</strong>, <strong>mostly learned from data</strong>, or <strong>mix</strong> — then defend it in one sentence.</p>
+    
+          <aside class="notes">Advance to “Sort on screen” (two slides: 1–4, then 5–7); ~6–8 minutes total for pairs. Open debrief expandables only after groups compare.</aside>
         </section>
 
-        <section>
+        <section class="lab lab-a-interactive">
           <span class="tag tag-lab">Lab A</span>
-          <h2>Example: traffic lights</h2>
-          <figure class="slide-media tight">
-            <img
-              class="concept-hero"
-              src="assets/images/traffic_light.gif"
-              data-static-src="assets/images/traffic_light_static.svg"
-              alt="Animated traffic signal lamp"
-              width="149"
-              height="250"
-            />
-            <figcaption class="fragment">Timers and phase plans are mostly <strong>rules + sensors</strong> — useful contrast before spam filters and recommender systems.</figcaption>
-          </figure>
+          <h2>Sort on screen</h2>
+          <p class="lab-a-part">Part 1 of 2 · scenarios 1–4</p>
+          <p class="lab-a-hint">
+            <strong>Tap one bucket per card.</strong> Pairs: align your picks, or keep one intentional disagreement to debate aloud.
+          </p>
+          <div class="lab-a-legend" aria-hidden="true">
+            <span class="lab-a-pill lab-a-pill-rules">Mostly rules</span>
+            <span class="lab-a-pill lab-a-pill-learned">Mostly learned</span>
+            <span class="lab-a-pill lab-a-pill-mix">Mix</span>
+          </div>
+          <form class="lab-a-form" aria-label="Lab A part 1: scenarios 1 through 4" onsubmit="return false">
+            <div class="lab-a-toolbar" aria-live="polite" aria-atomic="true">
+              <div class="lab-a-progress-block">
+                <span class="lab-a-progress-label">Progress</span>
+                <div class="lab-a-progress-track">
+                  <div class="lab-a-progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="lab-a-progress-count">0 / 7</span>
+              </div>
+              <button type="button" class="lab-a-clear">Clear picks</button>
+            </div>
+            <div class="lab-a-scroll lab-a-scroll--short">
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">1</span>
+                  <p class="lab-a-prompt" id="lab-a-q1">Coordinated traffic lights (timing plans + vehicle loops)</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q1">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_1" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_1" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_1" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">2</span>
+                  <p class="lab-a-prompt" id="lab-a-q2">Email spam filter (trained on labeled messages)</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q2">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_2" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_2" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_2" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">3</span>
+                  <p class="lab-a-prompt" id="lab-a-q3">Credit-card “unusual spend” alert</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q3">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_3" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_3" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_3" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">4</span>
+                  <p class="lab-a-prompt" id="lab-a-q4">Photo app that groups faces from your library</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q4">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_4" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_4" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_4" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+          <aside class="notes">Advance to part 2 for scenarios 5–7. Progress and “Clear picks” stay in sync across both slides.</aside>
         </section>
+
+        <section class="lab lab-a-interactive">
+          <span class="tag tag-lab">Lab A</span>
+          <h2>Sort on screen</h2>
+          <p class="lab-a-part">Part 2 of 2 · scenarios 5–7</p>
+          <p class="lab-a-hint">Same picks, same progress bar — finish the set here, then debrief together.</p>
+          <div class="lab-a-legend" aria-hidden="true">
+            <span class="lab-a-pill lab-a-pill-rules">Mostly rules</span>
+            <span class="lab-a-pill lab-a-pill-learned">Mostly learned</span>
+            <span class="lab-a-pill lab-a-pill-mix">Mix</span>
+          </div>
+          <form class="lab-a-form" aria-label="Lab A part 2: scenarios 5 through 7" onsubmit="return false">
+            <div class="lab-a-toolbar" aria-live="polite" aria-atomic="true">
+              <div class="lab-a-progress-block">
+                <span class="lab-a-progress-label">Progress</span>
+                <div class="lab-a-progress-track">
+                  <div class="lab-a-progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="lab-a-progress-count">0 / 7</span>
+              </div>
+              <button type="button" class="lab-a-clear">Clear picks</button>
+            </div>
+            <div class="lab-a-scroll lab-a-scroll--short">
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">5</span>
+                  <p class="lab-a-prompt" id="lab-a-q5">Thermostat schedule you program once (time + setpoints)</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q5">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_5" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_5" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_5" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">6</span>
+                  <p class="lab-a-prompt" id="lab-a-q6">Maps ETA during rush hour</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q6">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_6" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_6" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_6" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+              <div class="lab-a-card">
+                <div class="lab-a-card-top">
+                  <span class="lab-a-badge" aria-hidden="true">7</span>
+                  <p class="lab-a-prompt" id="lab-a-q7">Assistant that drafts full paragraphs from a short prompt</p>
+                </div>
+                <div class="lab-a-segment" role="radiogroup" aria-labelledby="lab-a-q7">
+                  <label class="lab-a-seg lab-a-seg-rules">
+                    <input type="radio" name="laba_7" value="rules" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">⚙</span> Rules</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-learned">
+                    <input type="radio" name="laba_7" value="learned" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">▤</span> Learned</span>
+                  </label>
+                  <label class="lab-a-seg lab-a-seg-mix">
+                    <input type="radio" name="laba_7" value="mix" />
+                    <span class="lab-a-seg-inner"><span class="lab-a-seg-ico" aria-hidden="true">↔</span> Mix</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </form>
+          <p class="lab-a-stems fragment"><strong>One-sentence stem:</strong> “We picked ___ because the behavior mainly comes from ___.”</p>
+          <aside class="notes">Radios won’t advance the deck. Invite 2–3 pairs to share a disagreement before the debrief slide.</aside>
+        </section>
+
+        <section class="lab lab-a-debrief">
+          <span class="tag tag-lab">Lab A</span>
+          <h2>Debrief — one defensible read each</h2>
+          <p class="lab-a-hint">Open after discussion. These are <strong>teaching labels</strong>, not a grading key.</p>
+          <div class="lab-a-details-stack">
+            <details>
+              <summary>Traffic lights (timing + loops)</summary>
+              <p><strong>Mostly rules.</strong> Phases and safety interlocks are engineered; sensors trigger transitions but don’t replace the rule graph. Adaptive systems add policy logic — still often rule-forward.</p>
+            </details>
+            <details>
+              <summary>Spam filter (labeled mail)</summary>
+              <p><strong>Mostly learned.</strong> The boundary is fit from examples (and updated); hand-written rules may wrap it, but the “smarts” are statistical.</p>
+            </details>
+            <details>
+              <summary>Fraud “unusual spend”</summary>
+              <p><strong>Mix.</strong> Hard thresholds and blocklists are rules; risk scoring from transaction history is learned. Products combine both.</p>
+            </details>
+            <details>
+              <summary>Face grouping in photos</summary>
+              <p><strong>Mostly learned.</strong> Embeddings / similarity are fit from data; UX rules decide what to show, but grouping quality is ML-driven.</p>
+            </details>
+            <details>
+              <summary>Thermostat schedule</summary>
+              <p><strong>Mostly rules.</strong> If you set times and setpoints explicitly, behavior is largely deterministic. “Smart” comfort learning shifts toward <strong>mix</strong>.</p>
+            </details>
+            <details>
+              <summary>Maps ETA</summary>
+              <p><strong>Mix.</strong> Routing constraints + map graph are structured rules; live speeds and demand are learned from telemetry and history.</p>
+            </details>
+            <details>
+              <summary>Paragraph-drafting assistant</summary>
+              <p><strong>Mostly learned.</strong> Core text is from a model fit on large corpora; product guardrails add rules on top — still learned-first in practice.</p>
+            </details>
+          </div>
+        </section>RE
 
         <section>
           <span class="tag tag-ai">Chapter 2</span>
@@ -124,93 +336,8 @@
           <p class="callout">A model can become <strong>too faithful</strong> to training quirks — great on yesterday’s data, brittle tomorrow. Regularization, more diverse data, and honest evaluation help.</p>
         </section>
 
-        <section class="lab">
-          <span class="tag tag-lab">Hands-on</span>
-          <h2>Lab B — “Guess the rule”</h2>
-          <p><strong>Goal:</strong> feel why a held-out set matters.</p>
-          <ul>
-            <li>Facilitator presents 5–8 toy labeled examples (words, emojis, silly patterns).</li>
-            <li>Groups propose a rule, then see <strong>held-out</strong> cases meant to break naive rules.</li>
-            <li><strong>Done when:</strong> learners can name <em>training set</em>, <em>hypothesis</em>, and <em>why test matters</em>.</li>
-          </ul>
-        </section>
-
         <section>
-          <span class="tag tag-lab">Lab B</span>
-          <h2>Train / validation / test</h2>
-          <figure class="slide-media">
-            <img class="concept-hero" src="assets/images/train_validate_test.png" alt="Diagram comparing train-test split and train-validate-test split" loading="lazy" />
-            <figcaption class="fragment">Many teams reserve a <strong>validation</strong> slice for tuning, and keep a final <strong>test</strong> set untouched for realistic estimates.</figcaption>
-          </figure>
-        </section>
-
-        <section>
-          <span class="tag tag-model">Chapter 4</span>
-          <h2>What we mean by “model”</h2>
-          <ul>
-            <li class="fragment"><strong>Architecture / family:</strong> the blueprint (what is wired to what).</li>
-            <li class="fragment"><strong>Weights / parameters:</strong> numbers learned from data — the “memory” of training.</li>
-            <li class="fragment"><strong>Artifact:</strong> the saved file(s) you version, deploy, and monitor.</li>
-          </ul>
-        </section>
-
-        <section>
-          <span class="tag tag-model">Chapter 4</span>
-          <h2>Domain example — inbox &amp; spam</h2>
-          <figure class="slide-media tight">
-            <img class="concept-hero" src="assets/images/icon_spam.svg" alt="Spam email icon" width="256" height="256" />
-            <figcaption class="fragment">Classic supervised learning: labeled messages teach a boundary between ham and spam.</figcaption>
-          </figure>
-        </section>
-
-        <section>
-          <span class="tag tag-model">Chapter 4</span>
-          <h2>Domain example — risk &amp; signals</h2>
-          <figure class="slide-media">
-            <img class="concept-hero" src="assets/images/matrix_code.jpg" alt="Abstract green characters suggesting digital data" loading="lazy" />
-            <figcaption class="fragment">Tabular models score risk, churn, or fraud from structured histories — not “matrix rain,” but the metaphor is <em>lots of fields</em>.</figcaption>
-          </figure>
-        </section>
-
-        <section>
-          <span class="tag tag-model">Chapter 4</span>
-          <h2>Domain example — vision &amp; cameras</h2>
-          <figure class="slide-media">
-            <img class="concept-hero" src="assets/images/unsplash_smartphone.jpg" alt="Smartphone camera in use" loading="lazy" />
-            <figcaption class="fragment">Pixels in → labels or boxes out — same loop, different architecture families (CNNs, ViTs, …).</figcaption>
-          </figure>
-        </section>
-
-        <section>
-          <span class="tag tag-model">Chapter 4</span>
-          <h2>Domain example — recommendations</h2>
-          <figure class="slide-media">
-            <img class="concept-hero" src="assets/images/unsplash_creative.jpg" alt="Abstract flowing shapes suggesting many choices" loading="lazy" />
-            <figcaption class="fragment">Ranking “what’s next” pairs users, items, and context — overlaps with language modeling more than people expect.</figcaption>
-          </figure>
-        </section>
-
-        <section class="lab">
-          <span class="tag tag-lab">Hands-on</span>
-          <h2>Lab C — “Name the model” scavenger</h2>
-          <p><strong>Goal:</strong> for 2–3 apps: name <em>input</em>, <em>output</em>, and whether it’s <strong>generative</strong>.</p>
-          <ul>
-            <li>Optional twist: find one experience that is clearly <strong>next-step prediction</strong> (keyboard, IDE).</li>
-            <li><strong>Done when:</strong> pairs can explain one chain in plain language.</li>
-          </ul>
-        </section>
-
-        <section>
-          <span class="tag tag-lab">Lab C</span>
-          <h2>Phones are full of tiny predictors</h2>
-          <figure class="slide-media">
-            <img class="concept-hero" src="assets/images/unsplash_smartphone.jpg" alt="People using smartphones" loading="lazy" />
-            <figcaption class="fragment">Keyboard suggestions, photo enhancement, voice typing — many discriminative models stacked together.</figcaption>
-          </figure>
-        </section>
-
-        <section>
-          <span class="tag tag-dl">Chapter 5</span>
+          <span class="tag tag-dl">Chapter 4</span>
           <h2>Deep learning</h2>
           <figure class="slide-media">
             <img class="concept-hero" src="assets/images/artificial_neural_network.png" alt="Layered artificial neural network diagram" loading="lazy" />
@@ -219,7 +346,7 @@
         </section>
 
         <section>
-          <span class="tag tag-dl">Chapter 5</span>
+          <span class="tag tag-dl">Chapter 4</span>
           <h2>Composable blocks (cartoon)</h2>
           <div class="anim-layers" aria-label="Layered network blocks">
             <div class="layer">Input representation</div>
@@ -231,7 +358,7 @@
         </section>
 
         <section>
-          <span class="tag tag-dl">Chapter 5</span>
+          <span class="tag tag-dl">Chapter 4</span>
           <h2>When depth shines</h2>
           <figure class="slide-media tight">
             <img
@@ -247,7 +374,7 @@
         </section>
 
         <section>
-          <span class="tag tag-gen">Chapter 6</span>
+          <span class="tag tag-gen">Chapter 5</span>
           <h2>Generative AI</h2>
           <div class="callout">
             <ul>
@@ -259,7 +386,7 @@
         </section>
 
         <section>
-          <span class="tag tag-gen">Chapter 6</span>
+          <span class="tag tag-gen">Chapter 5</span>
           <h2>Side-by-side intuition</h2>
           <figure class="slide-media">
             <img class="concept-hero" src="assets/images/unsplash_creative.jpg" alt="Abstract creative gradient shapes" loading="lazy" />
@@ -268,7 +395,7 @@
         </section>
 
         <section>
-          <span class="tag tag-llm">Chapter 7</span>
+          <span class="tag tag-llm">Chapter 6</span>
           <h2>Large language models</h2>
           <ul>
             <li class="fragment">Text is chunked into <strong>tokens</strong> (words, subwords, symbols).</li>
@@ -278,7 +405,7 @@
         </section>
 
         <section>
-          <span class="tag tag-llm">Chapter 7</span>
+          <span class="tag tag-llm">Chapter 6</span>
           <h2>Tokenization (schematic)</h2>
           <figure class="slide-media tight">
             <svg class="concept-hero" viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tokenization schematic" style="background: #f8fafc; max-height: 36vh">
@@ -296,12 +423,12 @@
               </defs>
             </svg>
             <figcaption class="fragment">Vocabulary maps pieces ↔ integers; special tokens handle unknowns and padding.</figcaption>
-            <p class="fragment" style="margin-top: 0.5rem; font-size: 0.9em; color: var(--muted, #5c5c72)">You’ll open real tokenizers in <code>day1_building_transformer/tokenizer/</code> during Lab D.</p>
+            <p class="fragment" style="margin-top: 0.5rem; font-size: 0.9em; color: var(--muted, #5c5c72)">You’ll open real tokenizers in <code>day1_building_transformer/tokenizer/</code> during Lab C.</p>
           </figure>
         </section>
 
         <section>
-          <span class="tag tag-llm">Chapter 7</span>
+          <span class="tag tag-llm">Chapter 6</span>
           <h2>Limits to name out loud</h2>
           <ul>
             <li class="fragment">Hallucination / plausible-but-wrong answers</li>
@@ -311,7 +438,7 @@
         </section>
 
         <section>
-          <span class="tag tag-llm">Chapter 7</span>
+          <span class="tag tag-llm">Chapter 6</span>
           <h2>Transformer block (visual only)</h2>
           <figure class="slide-media tight">
             <svg class="concept-hero" viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Queries keys values cartoon" style="background: #fdf4ff; max-height: 34vh">
@@ -331,7 +458,7 @@
 
         <section class="lab">
           <span class="tag tag-lab">Hands-on</span>
-          <h2>Lab D — Tokenizer (code)</h2>
+          <h2>Lab C — Tokenizer (code)</h2>
           <ul>
             <li><strong>Repo path:</strong> <code>day1_building_transformer/tokenizer/</code></li>
             <li>Run <code>simple_tokenizer.py</code> or import <code>Tokenizer</code> on learner-provided sentences.</li>
@@ -341,7 +468,7 @@
         </section>
 
         <section>
-          <span class="tag tag-lab">Lab D</span>
+          <span class="tag tag-lab">Lab C</span>
           <h2>Neutral terminal vibe</h2>
           <figure class="slide-media">
             <img class="concept-hero" src="assets/images/matrix_code.jpg" alt="Abstract code-like characters" loading="lazy" />
@@ -363,7 +490,7 @@
 
         <section class="lab">
           <span class="tag tag-lab">Hands-on</span>
-          <h2>Lab E — Embeddings</h2>
+          <h2>Lab D — Embeddings</h2>
           <ul>
             <li><strong>Path:</strong> <code>day1_building_transformer/embeddings/</code> + README</li>
             <li>Inspect embedding rows/columns with <code>np_embedding.py</code>.</li>
@@ -373,7 +500,7 @@
 
         <section class="lab">
           <span class="tag tag-lab">Hands-on</span>
-          <h2>Lab F — Self-attention</h2>
+          <h2>Lab E — Self-attention</h2>
           <ul>
             <li><strong>Path:</strong> <code>day1_building_transformer/self_attention/</code> + README</li>
             <li>Walk through Q/K/V intuition with the NumPy scratch steps.</li>
@@ -414,6 +541,67 @@
         progress: true,
         plugins: [RevealNotes, RevealHighlight],
       });
+
+      function stopRevealFromStealingLabAClicks(ev) {
+        ev.stopPropagation();
+      }
+
+      function wireLabAInteractives() {
+        if (document.body.dataset.labAWired === "1") return;
+        document.body.dataset.labAWired = "1";
+        document.querySelectorAll(".lab-a-form, .lab-a-details-stack").forEach(function (el) {
+          ["mousedown", "click", "touchstart"].forEach(function (type) {
+            el.addEventListener(type, stopRevealFromStealingLabAClicks);
+          });
+        });
+      }
+
+      wireLabAInteractives();
+
+      function wireLabASortUI() {
+        if (document.body.dataset.labSortUi === "1") return;
+        document.body.dataset.labSortUi = "1";
+        var total = 7;
+        var forms = document.querySelectorAll(".lab-a-form");
+
+        function answeredCount() {
+          var n = 0;
+          for (var i = 1; i <= total; i++) {
+            if (document.querySelector('input[name="laba_' + i + '"]:checked')) n++;
+          }
+          return n;
+        }
+
+        function update() {
+          var n = answeredCount();
+          var pct = Math.round((n / total) * 100);
+          document.querySelectorAll(".lab-a-progress-fill").forEach(function (fill) {
+            fill.style.width = pct + "%";
+          });
+          document.querySelectorAll(".lab-a-progress-count").forEach(function (el) {
+            el.textContent = n + " / " + total;
+          });
+          document.querySelectorAll(".lab-a-clear").forEach(function (btn) {
+            btn.disabled = n === 0;
+          });
+        }
+
+        forms.forEach(function (form) {
+          form.addEventListener("change", update);
+        });
+        document.querySelectorAll(".lab-a-clear").forEach(function (btn) {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            forms.forEach(function (f) {
+              f.reset();
+            });
+            update();
+          });
+        });
+        update();
+      }
+
+      wireLabASortUI();
 
       function applyReducedMotionMedia() {
         var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
