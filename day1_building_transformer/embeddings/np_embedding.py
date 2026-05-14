@@ -16,12 +16,19 @@ class Embedding:
     
     def embed(self, token_ids):
         return self.embedding_matrix[token_ids]
+    
+    def embeded_matrix(self):
+        return self.embedding_matrix
 
 
-token = Tokenizer(["i love you", "i love ai"])
+token = Tokenizer(["i love pen", "i love ai"])
 vocab_size = len(token.vocab)
 embedding_dim = 4 
 
 embedding = Embedding(vocab_size, embedding_dim)
+print(embedding.embeded_matrix())
+print()
+print("============")
+print()
 encoded_sentence = token.encoding()
 print(embedding.embed(encoded_sentence))
