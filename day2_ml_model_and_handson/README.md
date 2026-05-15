@@ -59,74 +59,7 @@ Input + Rules -> Output
 ```
 We’ll build ML step-by-step like real engineers.
 
-# STAGE 1 — Data Understanding
+# Hugging face model, demo
+1. AI Humanizer - https://huggingface.co/spaces/gpthuman/ai-humanizer
+## How to integrate them
 
-Hands-on:
-
-- loading CSV
-- understanding rows/columns
-- statistics
-- missing values
-- plotting
-
-Projects:
-
-- student dataset
-- industrial sensor dataset
-- sales dataset
-
-# STAGE 2 — Regression
-
-We build:
-
--  linear regression manually
-- error calculation
-- gradient descent
-- prediction systems
-
-Projects:
-
-- salary predictor
-- house price predictor
-- electricity cost predictor
-
-# STAGE 3 — Classification
-
-We build:
-
-- spam classifier
-- disease predictor
-- customer churn detector
-
-Concepts:
-
-- sigmoid
-- probabilities
-- decision boundaries
-
-# STAGE 4 — Evaluation
-
-We manually compute:
-
-- accuracy
-- precision
-- recall
-- confusion matrix
-
-This is where real ML understanding begins.
-
-# STAGE 5 — Feature Engineering
-
-You’ll learn:
-
-how companies improve models
-handling real dirty data
-extracting patterns
-
-This is one of the MOST valuable industry skills.
-
-# STAGE 6 — Real ML Pipeline
-
-You’ll build:
-
-- Dataset → Cleaning → Training → Evaluation → Deployment
