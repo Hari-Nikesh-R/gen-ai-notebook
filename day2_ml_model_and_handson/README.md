@@ -61,5 +61,5 @@ We’ll build ML step-by-step like real engineers.
 
 # Hugging face model, demo
 1. AI Humanizer - https://huggingface.co/spaces/gpthuman/ai-humanizer
-## How to integrate them
-
+2. An uncensored video generation model based on LTX 2.3 supporting both t2v and i2v natively, as well as all of the other ltx 2.3 formats. -  http://huggingface.co/SulphurAI/Sulphur-2-base
+3. 
