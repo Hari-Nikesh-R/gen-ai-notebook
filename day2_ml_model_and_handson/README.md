@@ -38,33 +38,21 @@ We will simulate:
 5. Regression.
 6. Linear Regression.
 7. Classification.
-8. Types of Classification.
-9. Feature Engineering.
-10. Handling Missing data.
-11. Model Evaluation.
-12. Precision.
-13. Recall.
-14. Confusion Matrix.
-15. Overfitting.
-16. Underfitting.
+8. Feature Engineering.
 
 ---
 
-## What is Machine Learning?
-
-### Traditional Programming
-```
-Input + Rules -> Output
-```
-We’ll build ML step-by-step like real engineers.
 
 ## Hugging Face Model Demo
 1. **AI Humanizer** - [https://huggingface.co/spaces/gpthuman/ai-humanizer](https://huggingface.co/spaces/gpthuman/ai-humanizer)
 
-### How to integrate them
-**What Is Machine Learning ACTUALLY?**
 
+## What is Machine Learning?
 Before ML existed, programmers wrote rules manually.
+### Traditional Programming
+```
+Input + Rules -> Output
+```
 
 **Example:**
 ```python
@@ -107,7 +95,7 @@ So instead of writing rules manually… we let the machine:
 
 ---
 
-## PART 2 — What Is a LABEL?
+## What Is a LABEL?
 
 This is the **MOST IMPORTANT** concept. Imagine teaching a child. You show:
 
@@ -147,7 +135,7 @@ Labels guide learning, like answer keys in school.
 
 ---
 
-## PART 3 — Supervised Learning
+## Supervised Learning
 
 ### DEFINITION
 Supervised learning means learning using **labeled data**.
@@ -190,7 +178,7 @@ Because prediction is valuable. Companies want predictions.
 
 ---
 
-## PART 4 — What Is Regression?
+## What Is Regression?
 
 Regression is a type of supervised learning.
 
@@ -278,7 +266,7 @@ So for 5: `5 → 50`
 
 ---
 
-## PART 5 — What Is Classification?
+## What Is Classification?
 
 Classification is **ALSO** supervised learning, but instead of numbers, it predicts **CATEGORIES**.
 
@@ -318,7 +306,7 @@ It tries to separate categories.
 
 ---
 
-## PART 6 — What Is Unsupervised Learning?
+## What Is Unsupervised Learning?
 
 Now remove labels completely.
 
@@ -335,7 +323,7 @@ Because real-world data often has **NO labels**. Labels are expensive.
 
 ---
 
-## PART 7 — What Is Clustering?
+## What Is Clustering?
 
 Clustering is a type of unsupervised learning.
 
