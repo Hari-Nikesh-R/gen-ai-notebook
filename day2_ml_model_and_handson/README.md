@@ -343,7 +343,7 @@ Automatically.
 
 ---
 
-## PART 8 — What Is K-Means?
+## What Is K-Means?
 
 K-Means is a clustering algorithm.
 
@@ -394,7 +394,7 @@ The model becomes trained. Then we can use `model.predict()`.
 
 ---
 
-## PART 9 — Why ML Is Powerful
+## Why ML Is Powerful
 
 Because it can:
 - Learn automatically
@@ -408,7 +408,7 @@ Because it can:
 
 ---
 
-## PART 10 — MOST IMPORTANT UNDERSTANDING
+## OUR UNDERSTANDING
 
 ### Supervised Learning
 - **Goal:** Predict outputs

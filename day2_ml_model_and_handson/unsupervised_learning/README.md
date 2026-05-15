@@ -11,9 +11,6 @@ But you **DO NOT** know:
 
 There are **NO labels**. Nobody manually classified these customers.
 
-### Important Reality
-Real-world data is mostly **UNLABELED** because labeling is expensive.
-
 **Example:** Imagine manually labeling 1 billion YouTube videos. **Impossible.** So we need systems that can discover structure automatically. That is the purpose of unsupervised learning.
 
 ---
@@ -27,7 +24,7 @@ Real-world data is mostly **UNLABELED** because labeling is expensive.
 
 ---
 
-## PART 2 — What Does “Pattern” Mean?
+## What Does “Pattern” Mean?
 
 This word confuses many people.
 
@@ -46,7 +43,6 @@ You naturally see:
 
 The machine tries to discover these natural groupings.
 
-### IMPORTANT UNDERSTANDING
 The machine is NOT magically intelligent. It is mathematically measuring:
 - **Similarity**
 - **Distance**
@@ -54,9 +50,7 @@ The machine is NOT magically intelligent. It is mathematically measuring:
 
 ---
 
-## PART 3 — What Is Similarity?
-
-This is the **HEART** of unsupervised learning.
+## What Is Similarity?
 
 **Example 1:**
 | Person | Age |
@@ -80,7 +74,7 @@ This is the **HEART** of unsupervised learning.
 
 ---
 
-## PART 4 — What Is Clustering REALLY?
+## What Is Clustering REALLY?
 
 **Clustering means:** Grouping similar data points together.
 
@@ -96,9 +90,7 @@ The machine sees numbers/features and then groups similar data mathematically.
 
 ---
 
-## PART 5 — Why Businesses Care About Clustering
-
-**VERY IMPORTANT.**
+## Why Businesses Care About Clustering
 
 - **Netflix:** Clusters users by movie taste, watch history, and genres to recommend content.
 - **Amazon:** Groups luxury buyers, discount buyers, and frequent shoppers to target ads.
@@ -109,7 +101,7 @@ The machine sees numbers/features and then groups similar data mathematically.
 
 ---
 
-## PART 6 — What Is K-Means REALLY?
+## What Is K-Means REALLY?
 
 ### K-Means Goal
 Divide data into **K groups**, where:
@@ -127,7 +119,7 @@ But the machine must mathematically discover this.
 
 ---
 
-## PART 7 — K-Means Step-by-Step Deep Dive
+## K-Means Step-by-Step Deep Dive
 
 ### STEP 1 — Choose K
 Suppose **K = 2** (Find 2 groups).
@@ -176,21 +168,21 @@ Distances are recalculated, and assignments may change. This repeats until stabl
 
 ---
 
-## PART 9 — Major Confusion
+## Major Confusion
 
 > **"How does machine know what is correct?"**
 > It **DOESN’T**. That’s the whole point. There is **NO correct answer**, only similarity, closeness, and grouping quality.
 
 ---
 
-## PART 10 — Another Important Question
+## Another Important Question
 
 > **"What if grouping is wrong?"**
 > K-Means can absolutely make bad clusters. Example: `10, 11, 12, 50, 51, 1000`. Outliers can confuse clustering. That is why **data preprocessing, normalization, and choosing K** matter.
 
 ---
 
-## PART 11 — Why Unsupervised Learning Is HARDER
+## Why Unsupervised Learning Is HARDER
 
 Because:
 - No labels
@@ -201,15 +193,13 @@ The machine explores blindly. This makes it more difficult, research-heavy, and 
 
 ---
 
-## PART 12 — Types of Unsupervised Learning
+## Types of Unsupervised Learning
 
 1.  **Clustering:** Group similar items (e.g., customer segmentation).
 2.  **Dimensionality Reduction:** Compress data while keeping important information (e.g., image compression, embeddings).
 3.  **Anomaly Detection:** Find unusual data (e.g., fraud detection, cyber attacks).
 
 ---
-
-## PART 13 — Python Example with Explanation
 
 ```python
 from sklearn.cluster import KMeans
@@ -242,19 +232,12 @@ This is **NOT** original labels. These are **generated cluster IDs**.
 
 ---
 
-## PART 14 — The Deepest Understanding
-
-- **Supervised Learning Goal:** Predict known outputs.
-- **Unsupervised Learning Goal:** Understand unknown structure.
-
----
-
-## FINAL REAL-WORLD ANALOGY
-
 **Supervised Learning:**
+Predict known outputs.
 A teacher gives questions and answers. The student learns from the key.
 
 **Unsupervised Learning:**
+Understand unknown structure.
 You enter a new city alone. Nobody guides you. You observe, explore, identify patterns, and group similar places yourself.
 
 **That is unsupervised learning.**
