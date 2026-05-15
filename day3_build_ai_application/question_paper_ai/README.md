@@ -254,6 +254,7 @@ Now move to your **LOCAL MACHINE**.
 **Step 16 — Install llama.cpp**
 Clone:
 `llama.cpp` Repository
+https://github.com/ggml-org/llama.cpp
 
 **Step 17 — Extract Model ZIP**
 You should now have:
@@ -261,6 +262,12 @@ You should now have:
 
 **Step 18 — Convert To GGUF**
 Inside `llama.cpp`:
+<br>
+Install dependecies then, 
+```bash
+!pip install unsloth
+!pip install --no-deps transformers accelerate peft trl bitsandbytes
+```
 ```bash
 python convert_hf_to_gguf.py \
     ../question-generator-model \
