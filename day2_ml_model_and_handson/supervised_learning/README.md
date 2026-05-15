@@ -60,47 +60,58 @@ The machine discovers hidden structures and groups similar items together. This 
 
 ## 4. Hands-on: Supervised Learning (Python)
 
-Let's build a tiny model to predict whether a student passes based on their study hours.
+Let's build a tiny model to predict a person's salary based on their years of experience. This is a classic Linear Regression problem.
 
 ### Dataset
-| Hours | Result (Target) |
+| Experience (Years) | Salary ($k) |
 | :--- | :--- |
-| 1 | Fail (0) |
-| 2 | Fail (0) |
-| 3 | Pass (1) |
-| 5 | Pass (1) |
+| 1 | 30 |
+| 2 | 40 |
+| 3 | 50 |
+| 4 | 60 |
+| 5 | 70 |
 
 ### Implementation
 
 ```python
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Input data: Study Hours (Feature)
+# Input data: Years of Experience (Feature)
 # ML models expect data in a 2D array format
-X = np.array([[1], [2], [3], [5]])
+X = np.array([[1], [2], [3], [4], [5]])
 
-# Output labels: 0 = Fail, 1 = Pass (Labels)
-y = np.array([0, 0, 1, 1])
+# Output data: Salary in 1000s (Labels/Targets)
+y = np.array([30, 40, 50, 60, 70])
 
-# 1. Create the model (Logistic Regression for classification)
-model = LogisticRegression()
+# 1. Create the model (Linear Regression for predicting numbers)
+model = LinearRegression()
 
 # 2. Train the model (The model learns the relationship)
 model.fit(X, y)
 
-# 3. Predict for a new student (4 hours of study)
-prediction = model.predict([[4]])
+# 3. Predict for a new employee (6 years of experience)
+prediction = model.predict([[6]])
+print(f"Prediction for 6 years: ${prediction[0]:.2f}k")
 
-print(f"Prediction for 4 hours: {'Pass' if prediction[0] == 1 else 'Fail'}")
+# 4. Visualize the data and the learned line
+plt.scatter(X, y, color='blue', s=100, label='Actual Salaries')
+plt.plot(X, model.predict(X), color='red', linewidth=3, label='Regression Line')
+plt.title("Salary Prediction using Linear Regression")
+plt.xlabel("Years of Experience")
+plt.ylabel("Salary ($k)")
+plt.legend()
+plt.show()
 ```
 
 ### Breakdown of Steps
-1.  **Import Library:** We use `LogisticRegression` from `sklearn` for binary classification.
-2.  **Input Data (X):** Study hours reshaped into a matrix.
-3.  **Labels (y):** The "correct answers" the model learns from.
-4.  **Training (`.fit`):** The model mathematically identifies the boundary between Pass and Fail.
+1.  **Import Library:** We use `LinearRegression` from `sklearn` for predicting continuous numbers.
+2.  **Input Data (X):** Experience years reshaped into a 2D matrix (rows and columns).
+3.  **Labels (y):** The "correct answers" (Salaries) the model learns from.
+4.  **Training (`.fit`):** The model mathematically identifies the best straight line to fit the data.
 5.  **Prediction (`.predict`):** The model applies its learned patterns to new, unseen data.
+6.  **Visualization:** We plot the data points and the regression line using Matplotlib.
 
 ---
 

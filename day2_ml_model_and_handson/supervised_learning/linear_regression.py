@@ -1,20 +1,46 @@
-from sklearn.linear_model import LogisticRegression
 import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
-# Input data: Study Hours (Feature)
-# ML models expect data in a 2D array format
-X = np.array([[1], [2], [3], [5]])
+# Step 1: Create the dataset (Supervised Learning requires Labels!)
+# Input data (Features): Years of Experience
+X = np.array([
+    [1], [2], [3], [4], [5]
+])
 
-# Output labels: 0 = Fail, 1 = Pass (Labels)
-y = np.array([0, 0, 1, 1])
+# Output data (Labels/Targets): Salary in thousands ($k)
+y = np.array([30, 40, 50, 60, 70])
 
-# 1. Create the model (Logistic Regression for classification)
-model = LogisticRegression()
+print("Experience (Years):", X.flatten())
+print("Salaries ($k):", y)
+print("Notice how we provide BOTH the input and the correct answer.\n")
 
-# 2. Train the model (The model learns the relationship)
+# Step 2: Choose the model
+# We use Linear Regression because we are predicting a continuous number (Salary)
+model = LinearRegression()
+
+# Step 3: Let the machine learn (Train the model)
+print("Training the machine... (Learning the relationship)\n")
 model.fit(X, y)
 
-# 3. Predict for a new student (4 hours of study)
-prediction = model.predict([[4]])
+# Step 4: See the results!
+print("--- PREDICTIONS ---")
+# Let's predict the salary for someone with 6 years and 10 years of experience
+new_experiences = np.array([[6], [10]])
+predictions = model.predict(new_experiences)
 
-print(f"Prediction for 4 hours: {'Pass' if prediction[0] == 1 else 'Fail'}")
+for i in range(len(new_experiences)):
+    print(f"Predicted Salary for {new_experiences[i][0]} years: ${predictions[i]:.2f}k")
+
+# Step 5: Visualize the learned relationship
+print("\nClose the graph window to finish the program.")
+
+plt.scatter(X, y, color='blue', s=100, label='Actual Data')
+# We plot the line using the predictions for the existing X values
+plt.plot(X, model.predict(X), color='red', linewidth=3, label='Learned Regression Line')
+
+plt.title("Salary vs. Experience (Supervised Learning)")
+plt.xlabel("Years of Experience")
+plt.ylabel("Salary ($k)")
+plt.legend()
+plt.show()

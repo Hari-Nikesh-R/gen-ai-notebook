@@ -91,3 +91,23 @@ print("Prediction for 6 hours:", prediction)
 
 * Not using sklearn.
 * Not using AI libraries.
+
+## Step 6 - Visualize the Graph using Matplotlib
+```python
+import matplotlib.pyplot as plt
+
+hours_studied = [1, 2, 3, 4, 5]
+marks_scored = [20, 30, 40, 50, 60]
+
+# Plotting the data points
+plt.scatter(hours_studied, marks_scored, color='blue', label='Actual Marks')
+
+# Plotting the trend line
+plt.plot(hours_studied, marks_scored, color='red', linestyle='--', label='Trend Line')
+
+plt.title("Hours Studied vs Marks Scored")
+plt.xlabel("Hours Studied")
+plt.ylabel("Marks Scored")
+plt.legend()
+plt.show()
+```

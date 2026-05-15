@@ -204,21 +204,32 @@ The machine explores blindly. This makes it more difficult, research-heavy, and 
 ```python
 from sklearn.cluster import KMeans
 import numpy as np
+import matplotlib.pyplot as plt
 
-# Data
+# Data: [Hours Playing Games, Exam Marks]
 X = np.array([
-    [10], [12], [15],
-    [80], [85], [90]
+    [5.0, 20], [6.0, 25], [5.5, 22],  # Gamers
+    [1.0, 90], [0.5, 95], [1.5, 85],  # Studious
+    [1.0, 30], [2.0, 35], [1.5, 40]   # Struggling
 ])
 
-# Model
-model = KMeans(n_clusters=2)
+# Model (We want 3 groups)
+model = KMeans(n_clusters=3, random_state=42)
 
 # Learning
 model.fit(X)
 
 # Results
 print(model.labels_)
+
+# Visualize
+plt.scatter(X[:, 0], X[:, 1], c=model.labels_, cmap='viridis', s=100)
+plt.scatter(model.cluster_centers_[:, 0], model.cluster_centers_[:, 1], color='red', marker='X', s=200, label='Centroids')
+plt.title("Student Segmentation")
+plt.xlabel("Hours Playing Games")
+plt.ylabel("Exam Marks")
+plt.legend()
+plt.show()
 ```
 
 ### WHAT fit() DOES HERE
@@ -226,7 +237,7 @@ Unlike supervised learning (`fit(X, y)`), here we use `fit(X)`. There are **no l
 
 ### WHAT labels_ MEANS
 This is **NOT** original labels. These are **generated cluster IDs**.
-- **Example:** `[0, 0, 0, 1, 1, 1]` means the first 3 belong together and the next 3 belong together.
+- **Example:** `[1, 1, 1, 0, 0, 0, 2, 2, 2]` means the first 3 belong together, the next 3 belong together, etc.
 
 **IMPORTANT:** Cluster labels are arbitrary. `0` does not mean "good" or "pass"; it only means "same group".
 

@@ -274,3 +274,27 @@ print(f"- Rainfall effect: {coefs['rainfall']:+.2f} ice creams per mm of rain")
 print(f"Improved Accuracy (R²): {r2_score(y, model_multi.predict(X_multi)) * 100:.2f}%")
 ```
 
+## Step 14 - Visualize the Graph using Matplotlib
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+
+temperature = [20, 22, 25, 27, 30, 31, 29, 35]
+icecream_sales = [120, 115, 150, 160, 210, 200, 190, 260]
+
+# Plotting the actual data points
+plt.scatter(temperature, icecream_sales, color='blue', label='Actual Sales')
+
+# Calculate the regression line points
+X = np.array(temperature)
+y_pred = slope * X + intercept # Using the slope and intercept from earlier steps
+
+# Plotting the regression line
+plt.plot(X, y_pred, color='red', label='Regression Line')
+
+plt.title("Temperature vs Ice Cream Sales")
+plt.xlabel("Temperature (°C)")
+plt.ylabel("Ice Cream Sales")
+plt.legend()
+plt.show()
+```
