@@ -215,3 +215,6 @@ Example:
 ```bash
 ollama pull deepseek-coder
 ```
+
+### Google Colab reference
+https://colab.research.google.com/drive/1ukIAk_ytgqtrYqaxncrNnNmFUl3xeWbi?usp=sharing
