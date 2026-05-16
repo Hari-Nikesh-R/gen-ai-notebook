@@ -489,15 +489,6 @@ Use:
 * sections
 * clear instructions
 
-## Interview Questions
-* Difference between AI, ML, and Generative AI?
-* What is prompt engineering?
-* Explain zero-shot prompting.
-* Why does chain-of-thought improve reasoning?
-* What are hallucinations?
-* What is prompt injection?
-* How do companies reduce hallucinations?
-* Why are system prompts important?
 
 ## Practical Homework
 
@@ -547,14 +538,7 @@ Revise:
 
 because ALL are connected.
 
-### Industry Relevance
-
-This module is directly used in:
-* ChatGPT applications
-* AI startups
-* enterprise copilots
-* AI SaaS products
-* educational AI systems
-* coding assistants
-* RAG systems
+### Reference 
+PDF for promp engineering pdf.
+![alt text](image.png)
 
