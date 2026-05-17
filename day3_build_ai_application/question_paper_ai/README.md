@@ -241,6 +241,8 @@ files.download("question-generator-model.zip")
 Now you have:
 * trained Hugging Face model
 
+#### Part 1 covering the before is available at [link](https://drive.google.com/file/d/1P7tWMSylfpVwZBniJvUwbHagIKKCDFTb/view?usp=drive_link)
+
 **IMPORTANT UNDERSTANDING**
 At this stage:
 you DO NOT yet have:
