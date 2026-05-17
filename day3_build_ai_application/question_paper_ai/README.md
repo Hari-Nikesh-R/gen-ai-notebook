@@ -216,8 +216,11 @@ Now actual fine-tuning starts.
 **Step 13 — Save Model**
 Run:
 ```python
-model.save_pretrained("question-generator-model")
-tokenizer.save_pretrained("question-generator-model")
+model.save_pretrained_merged(
+    "question-generator-model",
+    tokenizer,
+    save_method = "merged_16bit",
+)
 ```
 
 ### Download Model
