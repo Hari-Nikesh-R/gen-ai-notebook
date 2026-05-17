@@ -265,8 +265,8 @@ Inside `llama.cpp`:
 <br>
 Install dependecies then, 
 ```bash
-!pip install unsloth
-!pip install --no-deps transformers accelerate peft trl bitsandbytes
+pip install unsloth
+pip install --no-deps transformers accelerate peft trl bitsandbytes
 ```
 ```bash
 python convert_hf_to_gguf.py \
