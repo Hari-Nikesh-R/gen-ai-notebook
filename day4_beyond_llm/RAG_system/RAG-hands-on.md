@@ -33,11 +33,14 @@ rag_project/
 import os
 import numpy as np
 import faiss
+import torch
+torch.set_num_threads(1)
 from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
-from transformers import pipeline
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-PDF_PATH = "data/employee_leave_policy.pdf"
+
+PDF_PATH = "data/Employee-Handbook.pdf"
 
 
 def load_pdf_text(pdf_path: str) -> str:
@@ -92,6 +95,7 @@ def retrieve_chunks(query, chunks, index, embed_model, top_k=3):
 
 
 def answer_question(question, retrieved_chunks, generator):
+    tokenizer, model = generator
     context = "\n\n".join(retrieved_chunks)
 
     prompt = f"""
@@ -108,8 +112,9 @@ Question:
 Answer:
 """
 
-    result = generator(prompt, max_new_tokens=150, do_sample=False)
-    return result[0]["generated_text"]
+    inputs = tokenizer(prompt, return_tensors="pt")
+    outputs = model.generate(**inputs, max_new_tokens=150, do_sample=False)
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 
 def main():
@@ -133,18 +138,23 @@ def main():
 
     print("Loading generation model...")
     # You can replace this model with any local or hosted LLM later
-    generator = pipeline("text2text-generation", model="google/flan-t5-base")
+    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+    generator = (tokenizer, model)
 
-    while True:
-        question = input("\nAsk a question (type 'exit' to stop): ").strip()
-        if question.lower() == "exit":
-            break
+    try:
+        while True:
+            question = input("\nAsk a question (type 'exit' to stop): ").strip()
+            if question.lower() == "exit":
+                break
 
-        relevant_chunks = retrieve_chunks(question, chunks, index, embed_model, top_k=3)
-        answer = answer_question(question, relevant_chunks, generator)
+            relevant_chunks = retrieve_chunks(question, chunks, index, embed_model, top_k=3)
+            answer = answer_question(question, relevant_chunks, generator)
 
-        print("\nAnswer:")
-        print(answer)
+            print("\nAnswer:")
+            print(answer)
+    except (EOFError, KeyboardInterrupt):
+        print("\nExiting...")
 
 
 if __name__ == "__main__":
