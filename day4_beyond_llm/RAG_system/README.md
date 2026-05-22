@@ -1,349 +1,493 @@
-# What problem does the LLM has?
+# How the RAG Code Works
 
-Traditional LLMs:
-- Have fixed knowledge
-- Cannot access latest company data
-- May hallucinate answers
-- Cannot perform actions independently
-- Cannot remember long workflows properly
+You are now entering the core engineering layer of RAG systems.
 
-Example:
-If you ask:
-> “Summarize my company policy PDF”
+A beginner usually sees:
 
-A normal LLM:
-- Has never seen your PDF
-- May generate fake answers
+$$\text{Question} \rightarrow \text{AI Answer}$$
 
-## Why RAG Is Needed
+But internally, a RAG system performs multiple AI engineering operations.
 
-RAG helps AI:
-- Read external documents
-- Retrieve relevant information
-- Generate grounded responses
+We will break the entire code into:
+1. **PDF Reading**
+2. **Chunking**
+3. **Embeddings**
+4. **Vector Database (FAISS)**
+5. **Retrieval**
+6. **Prompt Construction**
+7. **LLM Generation**
+8. **Final Response**
 
-Instead of:
-- “Guessing”
+This directly aligns with your AI syllabus **Module 5 on RAG Systems**.
 
-It:
-- “Searches + Answers”
+---
 
-## Why Agentic AI Is Needed
+## FULL RAG FLOW
 
-Modern applications require:
-- Planning
-- Decision making
-- Multi-step execution
-- Tool usage
-- Memory handling
+```text
+       [ PDF Document ]
+              │
+              ▼
+       Text Extraction
+              │
+              ▼
+           Chunking
+              │
+              ▼
+          Embeddings
+              │
+              ▼
+     FAISS Vector Storage
+              ▲
+              │ (Similarity Search)
+              ▼
+        User Question
+              │
+              ▼
+      Question Embedding
+              │
+              ▼
+      Similarity Search
+              │
+              ▼
+     Top Relevant Chunks
+              │
+              ▼
+          LLM Prompt
+              │
+              ▼
+       Final AI Answer
+```
 
-Example:
-> “Read emails → extract invoices → update database → notify user”
+---
 
-This requires:
-- Multiple steps
-- Decision logic
-- Tool integration
+## STEP 1 — Reading the PDF
 
-That is where agents come in.
+### Code
+```python
+from pypdf import PdfReader
 
-# What Problem it Solves
+reader = PdfReader(pdf_path)
+```
 
-## RAG Solves
+### What happens internally?
 
-| Problem | Solution |
+The PDF contains:
+*   text
+*   formatting
+*   positions
+*   images
+*   metadata
+
+The library extracts raw text from pages.
+
+### Code
+```python
+text = []
+
+for page in reader.pages:
+    page_text = page.extract_text()
+    text.append(page_text)
+```
+
+### Internal Thinking
+
+Suppose the PDF contains:
+> "Employees are entitled to 12 casual leaves annually. Unused leaves cannot be carried forward."
+
+The extracted text becomes:
+```python
+[
+ "Employees are entitled to 12 casual leaves annually.",
+ "Unused leaves cannot be carried forward."
+]
+```
+Then, it is joined into one large string.
+
+### Why This Step Is Needed
+*   LLMs cannot directly read PDF binary files.
+*   We must:
+    1. extract text
+    2. clean text
+    3. prepare text
+    before AI processing.
+
+### Real Industry Problem Solved
+Companies store knowledge in:
+*   PDFs
+*   Word docs
+*   policies
+*   manuals
+
+RAG converts them into searchable AI knowledge.
+
+---
+
+## STEP 2 — Chunking
+
+### Code
+```python
+def chunk_text(text, chunk_size=500, overlap=100):
+```
+
+### Why Chunking Exists
+LLMs have token limits. A 300-page PDF:
+*   cannot fit into one prompt
+*   becomes too expensive
+*   slows retrieval
+
+So we split it into smaller semantic blocks.
+
+### Example
+
+Original document:
+*   **Page 1:** Leave policy
+*   **Page 2:** Sick leave
+*   **Page 3:** Attendance
+*   **Page 4:** Holidays
+
+After chunking:
+```python
+[
+ "Leave policy ...",
+ "Sick leave ...",
+ "Attendance rules ...",
+ "Holiday details ..."
+]
+```
+
+### Code Logic
+
+#### Splitting into words
+```python
+words = text.split()
+```
+*Example:*
+`["Employees", "are", "entitled", "to", "12", "casual", "leaves"]`
+
+#### Sliding Window Logic
+```python
+start = 0
+end = start + chunk_size
+```
+This creates chunks like:
+*   **Chunk 1** $\rightarrow$ words 0–500
+*   **Chunk 2** $\rightarrow$ words 400–900
+
+### Why Overlap Is Needed
+
+Without overlap:
+*   **Chunk 1:** `"Employees are entitled"`
+*   **Chunk 2:** `"to 12 casual leaves"`
+
+Meaning breaks! Overlap preserves semantic continuity.
+
+### Industry Insight
+Chunking strategy is one of the **MOST IMPORTANT** parts of RAG systems. Bad chunking leads to:
+*   poor retrieval
+*   hallucinations
+*   irrelevant answers
+
+---
+
+## STEP 3 — Embeddings
+
+This is the **MOST IMPORTANT** concept in RAG.
+
+### What Is an Embedding?
+*   Embedding converts text into numbers.
+*   AI cannot understand raw text; it understands vectors.
+
+### Example
+Sentence:
+> "Employee leave policy"
+
+becomes a mathematical vector:
+`[0.12, -0.55, 0.91, 0.44, ...]`
+
+This vector captures semantic meaning.
+
+### Embedding Code
+```python
+embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+```
+*This loads a pretrained embedding model.*
+
+Then:
+```python
+embeddings = embed_model.encode(chunks)
+```
+Each chunk becomes a vector.
+
+### Semantic Meaning
+The AI learns:
+$$\text{"leave policy"} \approx \text{"vacation rules"}$$
+because their vectors become close in mathematical space.
+
+### Visualization (Vector Space)
+```text
+     Sick Leave
+         ●
+
+Leave Policy ●
+
+Vacation Rules ●
+```
+Similar meanings cluster together.
+
+### Why Embeddings Matter
+*   **Without embeddings:** keyword search only (poor semantic understanding).
+*   **With embeddings:** meaning-based retrieval (intelligent search).
+
+### Real Industry Usage
+Embeddings power:
+*   ChatGPT memory
+*   recommendation systems
+*   semantic search
+*   enterprise AI assistants
+
+---
+
+## STEP 4 — FAISS Vector Database
+
+### Code
+```python
+index = faiss.IndexFlatIP(dimension)
+```
+
+### What Is FAISS?
+*   **FAISS** = Facebook AI Similarity Search.
+*   It stores vectors efficiently.
+
+### Why Normal Databases Fail
+Traditional SQL databases search using queries like:
+```sql
+SELECT * FROM documents WHERE text LIKE '%leave%';
+```
+This is keyword matching. But semantic search requires:
+*   vector mathematics
+*   similarity calculations
+
+### What FAISS Does
+It stores:
+$$\text{Chunk} \rightarrow \text{Vector}$$
+
+Then performs:
+*   nearest neighbor search
+*   cosine similarity
+*   semantic retrieval
+
+### Vector Storage
+```python
+index.add(embeddings)
+```
+Now FAISS contains all knowledge vectors.
+
+---
+
+## STEP 5 — User Question Embedding
+
+Suppose the user asks:
+> "How many leaves are allowed?"
+
+### Code
+```python
+query_embedding = embed_model.encode([query])
+```
+The question becomes a vector.
+
+### IMPORTANT CONCEPT
+Now, both items are in the same format:
+*   **document chunks** = vectors
+*   **question** = vector
+
+AI compares vector similarity mathematically.
+
+---
+
+## STEP 6 — Similarity Search
+
+### Code
+```python
+scores, indices = index.search(query_embedding, top_k)
+```
+
+### What Happens Internally
+FAISS computes similarity:
+$$\text{Question Vector} \quad \text{vs} \quad \text{Chunk Vectors}$$
+using cosine similarity.
+
+### Cosine Similarity
+Measures the angle between vectors.
+
+#### Formula
+$$\cos(\theta) = \frac{A \cdot B}{\|A\| \|B\|}$$
+
+#### Meaning
+*   Closer angle $\rightarrow$ higher semantic similarity.
+
+### Retrieval Example
+
+Suppose we have these chunks:
+*   **Chunk 1** $\rightarrow$ Leave policy
+*   **Chunk 2** $\rightarrow$ Salary policy
+*   **Chunk 3** $\rightarrow$ Attendance rules
+
+For the question:
+> "How many leaves?"
+
+FAISS returns:
+`[Chunk 1]`
+because its semantic meaning is the closest.
+
+---
+
+## STEP 7 — Prompt Construction
+
+Now the retrieved chunks are injected into the prompt.
+
+### Code
+```python
+prompt = f"""
+Context:
+{context}
+
+Question:
+{question}
+"""
+```
+
+### Why This Matters
+This is the **“Retrieval-Augmented”** part. Instead of the LLM guessing, we provide actual document knowledge.
+
+### Real Internal Prompt
+```text
+Context:
+Employees are entitled to 12 casual leaves annually.
+
+Question:
+How many leaves are allowed?
+```
+
+---
+
+## STEP 8 — LLM Generation
+
+### Code
+```python
+generator(prompt)
+```
+
+The LLM:
+1. reads the context
+2. understands the question
+3. generates a grounded answer
+
+### Final Output
+> "Employees are entitled to 12 casual leaves annually."
+
+### WHY RAG IS POWERFUL
+*   **Without RAG:** LLM may hallucinate.
+*   **With RAG:** answers are grounded in documents.
+
+---
+
+## FULL INTERNAL ENGINEERING VIEW
+
+```text
+                 [ PDF ]
+                    │
+                    ▼
+              Extract Text
+                    │
+                    ▼
+               Chunk Text
+                    │
+                    ▼
+       Convert Chunks → Embeddings
+                    │
+                    ▼
+             Store in FAISS
+                    │
+                    ▼
+              User Question
+                    │
+                    ▼
+            Question Embedding
+                    │
+                    ▼
+            Similarity Search
+                    │
+                    ▼
+          Retrieve Best Chunks
+                    │
+                    ▼
+     Send Context + Question to LLM
+                    │
+                    ▼
+           Generate Final Answer
+```
+
+---
+
+## Common Beginner Confusions
+
+1. **“Why embeddings if we already have text?”**
+   Because AI compares numbers mathematically, not raw language.
+
+2. **“Why FAISS?”**
+   Because vector search is computationally expensive. FAISS optimizes:
+   *   nearest neighbor search
+   *   high-dimensional vector retrieval
+
+3. **“Why chunking?”**
+   Because:
+   *   LLM context windows are limited.
+   *   Retrieval works better on smaller semantic units.
+
+4. **“Why overlap?”**
+   To preserve meaning between adjacent chunks.
+
+5. **“Does FAISS understand language?”**
+   No. The Embedding model understands language. FAISS only performs mathematical similarity search.
+
+---
+
+## REAL INDUSTRY ARCHITECTURE
+
+Modern enterprise RAG systems use:
+
+| Layer | Technologies |
 | :--- | :--- |
-| Hallucination | Uses actual documents |
-| Outdated knowledge | Retrieves latest data |
-| Large enterprise documents | Semantic search |
-| Searching PDFs manually | Intelligent retrieval |
+| **Embeddings** | OpenAI / BGE / E5 |
+| **Vector DB** | Pinecone / Weaviate / FAISS |
+| **Orchestration** | LangChain / LlamaIndex |
+| **LLM** | GPT / Claude / Llama |
+| **Backend** | FastAPI |
+| **Memory** | Redis |
+| **UI** | React / Streamlit |
 
-## Agentic AI Solves
+---
 
-| Problem | Solution |
-| :--- | :--- |
-| Manual workflows | Automation |
-| Multi-step reasoning | Planning |
-| Tool integration complexity | Agent orchestration |
-| Context switching | Memory systems |
-| Repetitive engineering tasks | Autonomous execution |
+## Where This Is Used In Real Companies
 
-# 3. How It Is Implemented
+*   **Enterprise AI Assistants:**
+    *   HR assistants
+    *   legal document search
+    *   technical support bots
+*   **Software Engineering:**
+    *   codebase assistants
+    *   architecture documentation AI
+*   **Healthcare:**
+    *   medical guideline retrieval
+*   **Finance:**
+    *   policy compliance assistants
 
-## A. RAG Architecture
+---
 
-### Flow
-```
-User Query
-     ↓
-Embedding Model
-     ↓
-Vector Search (FAISS)
-     ↓
-Relevant Chunks Retrieved
-     ↓
-LLM Generates Final Answer
-```
+## Common Production Problems
 
-### Step-by-Step Implementation
-
-#### Step 1 — Load Documents
-*Example:*
-- PDFs
-- DOCX
-- Database records
-- Company knowledge base
-
-#### Step 2 — Chunking
-Large documents are split into smaller pieces.
-*Example:*
-- Chunk 1 → Introduction
-- Chunk 2 → Installation
-- Chunk 3 → Pricing
-
-#### Step 3 — Generate Embeddings
-*Text → Vector representation*
-
-Embeddings capture:
-- Meaning
-- Semantic similarity
-
-#### Step 4 — Store in FAISS
-FAISS stores vectors efficiently for similarity search.
-
-#### Step 5 — Query Retrieval
-- User query is converted to embedding.
-- Top similar chunks are retrieved.
-
-#### Step 6 — LLM Generation
-- Retrieved chunks + user query are sent to LLM.
-- LLM generates grounded response.
-
-## B. Agentic AI Architecture
-
-### Core Components
-
-#### 1. Planning
-Breaks tasks into smaller steps.
-*Example:*
-- **Goal:** Create project report
-- **Plan:**
-  1. Read Jira tickets
-  2. Summarize progress
-  3. Generate report
-  4. Send email
-
-#### 2. Memory
-*Types:*
-- Short-term memory
-- Long-term memory
-- Conversation memory
-
-#### 3. Tools
-*Agents can use:*
-- APIs
-- Databases
-- Browsers
-- Code interpreters
-- Email services
-
-#### 4. Execution Engine
-Runs tasks step-by-step.
-
-### Typical Agent Flow
-```
-User Request
-    ↓
-Planner
-    ↓
-Task Breakdown
-    ↓
-Tool Selection
-    ↓
-Execution
-    ↓
-Memory Update
-    ↓
-Final Response
-```
-
-# 4. Practical Hands-On Example (Real Application)
-
-## Project 1 — PDF-Based Company Assistant
-
-### Real Use Case
-*A company wants:*
-- Internal policy chatbot
-- HR FAQ assistant
-- Technical documentation assistant
-
-### Features
-*Users can:*
-- Upload PDFs
-- Ask questions
-- Get contextual answers
-
-### Tech Stack
-| Component | Technology |
-| :--- | :--- |
-| Backend | Python FastAPI |
-| Vector DB | FAISS |
-| Embeddings | Sentence Transformers |
-| LLM | OpenAI / Ollama |
-| Frontend | React / Flutter |
-
-### Hands-On Flow
-
-#### Step 1
-Upload PDF
-*Example:*
-- Employee_Handbook.pdf
-
-#### Step 2
-Extract text
-*Libraries:*
-- PyPDF2
-- pdfplumber
-
-#### Step 3
-Chunk text
-*Example:*
-- chunk_size = 500
-- overlap = 50
-
-#### Step 4
-Generate embeddings
-*Example:*
-- sentence-transformers
-
-#### Step 5
-Store in FAISS
-
-#### Step 6
-Query chatbot
-*Example:*
-> "What is the leave policy?"
-
-#### Step 7
-Retrieve top chunks
-
-#### Step 8
-Generate final response
-
-## Project 2 — Multi-Step Automation Agent
-
-### Real Engineering Example
-*Build an AI Dev Assistant:*
-
-#### User Request
-> “Generate Spring Boot APIs from requirement document”
-
-### Agent Workflow
-```
-Requirement PDF
-      ↓
-Requirement Extraction Agent
-      ↓
-API Design Agent
-      ↓
-Code Generation Agent
-      ↓
-Testing Agent
-      ↓
-Documentation Agent
-```
-
-### Technologies
-| Area | Tools |
-| :--- | :--- |
-| Agent Framework | LangGraph / CrewAI |
-| LLM | GPT / Claude |
-| Memory | Redis |
-| Tools | GitHub API, File System |
-| Backend | Python |
-
-# 5. When To Use and When NOT To Use
-
-## Use RAG When
-
-#### ✅ You have:
-- PDFs
-- Enterprise documents
-- Knowledge bases
-- Frequently updated information
-- Large datasets
-
-#### ✅ Examples:
-- HR chatbot
-- Legal assistant
-- Technical support AI
-- Internal enterprise search
-
-## Do NOT Use RAG When
-
-#### ❌ Small static information
-*Example:*
-> "What is Java?"
-- No retrieval needed.
-
-#### ❌ Data changes very rarely
-- Simple prompt engineering is enough.
-
-#### ❌ Very low latency systems
-RAG adds:
-- Retrieval time
-- Embedding search overhead
-
-## Use Agentic AI When
-
-#### ✅ Multi-step workflows exist
-*Examples:*
-- DevOps automation
-- AI coding assistants
-- Email automation
-- Research assistants
-- Autonomous workflows
-
-#### ✅ Decision-making is required
-*Example:*
-> If invoice amount > 1 lakh
-> → send approval request
-> Else
-> → auto approve
-
-## Do NOT Use Agentic AI When
-
-#### ❌ Simple single-step tasks
-*Example:*
-- Translate text
-- Summarize paragraph
-
-#### ❌ Deterministic workflows
-- Traditional backend logic is better.
-
-#### ❌ High-risk critical systems
-Agents may:
-- Hallucinate
-- Misuse tools
-- Make unexpected decisions
-
-*Examples:*
-- Banking transaction approval
-- Medical diagnosis
-- Critical infrastructure control
-
-# Real-World Applications
-
-## RAG Applications
-- ChatGPT with company knowledge
-- Internal enterprise search
-- AI-powered LMS
-- AI legal assistants
-- Research paper assistants
-
-## Agentic AI Applications
-- AI software engineers
-- Autonomous testing systems
-- AI research assistants
-- Customer support automation
-- Multi-agent coding systems
+1. **Bad Chunking:** Causes irrelevant retrieval.
+2. **Weak Embeddings:** Poor semantic understanding.
+3. **Hallucinations:** LLM ignores context.
+4. **Retrieval Failure:** Wrong chunks returned.
