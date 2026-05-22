@@ -1,458 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Day 4: Beyond LLMs — RAG &amp; Agentic AI</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
-    <link rel="stylesheet" href="deck.css" />
-  </head>
-  <body class="anim-deck">
-    <!-- Ambient Backdrop Orbs -->
-    <div class="orb orb-a" aria-hidden="true"></div>
-    <div class="orb orb-b" aria-hidden="true"></div>
 
-    <div class="reveal">
-      <div class="slides">
-        
-        <!-- SECTION 1: INTRODUCTION & THE LLM LIMITATION -->
-        <section data-transition="zoom">
-          <div class="badge badge-rag">Day 4 Agenda</div>
-          <h1>Beyond LLMs</h1>
-          <h3>Retrieval-Augmented Generation &amp; Agentic AI Architecture</h3>
-          <div class="slide-cols">
-            <div class="col" style="flex: 1.5;">
-              <p style="font-size: 1.1rem; margin-top: 1rem;">
-                Welcome to Day 4! Today we bridge the gap between static model parameters and dynamic, real-world data, building autonomous systems that plan, decide, and act.
-              </p>
-              <div class="glass-panel" style="margin-top: 1rem; border-left: 4px solid var(--rag-accent);">
-                <span style="font-weight:600; color:#fff;">Day Outline:</span> RAG Foundations → Embeddings &amp; FAISS → Autonomous Agents → Hands-On PDF Bots &amp; Automations.
-              </div>
-            </div>
-            <div class="col">
-              <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Beautiful dark gradient flow" />
-                <div class="img-label">Day 4: RAG &amp; Agentic Systems</div>
-              </div>
-            </div>
-          </div>
-        </section>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Day 4: Beyond LLMs — RAG &amp; Agentic AI Portal</title>
+  <link rel="stylesheet" href="deck.css" />
+</head>
 
-        <!-- THE PROBLEM -->
-        <section data-transition="slide-in fade-out">
-          <div class="badge badge-warning">The Challenge</div>
-          <h2>What limits traditional LLMs?</h2>
-          <div class="slide-cols">
-            <div class="col">
-              <p>Vanilla Large Language Models are highly capable, but face severe architectural boundaries:</p>
-              <ul class="cross-list" style="font-size: 0.85em; margin-top: 1rem;">
-                <li class="fragment"><strong>Fixed Knowledge:</strong> Frozen parameters restrict awareness to training cutoff dates.</li>
-                <li class="fragment"><strong>Isolated Data:</strong> Cannot naturally read private company docs, PDFs, or secure databases.</li>
-                <li class="fragment"><strong>Hallucination:</strong> Confidently invents plausible-sounding answers when lacking factual context.</li>
-                <li class="fragment"><strong>Actionless Brain:</strong> Cannot execute actions or make API decisions autonomously.</li>
-                <li class="fragment"><strong>Fleeting Focus:</strong> Limit to context window memory makes long-range workflows difficult.</li>
-              </ul>
-            </div>
-            <div class="col">
-              <div class="glass-panel" style="border-color: rgba(239, 68, 68, 0.3);">
-                <h4 style="color: var(--warn-accent); margin-bottom: 0.5rem;">🚨 The Scenario</h4>
-                <p style="font-size: 0.85em; font-style: italic;">
-                  "Summarize my company policy PDF"
-                </p>
-                <div class="fragment" style="margin-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem; font-size: 0.8em;">
-                  <strong>Normal LLM Output:</strong><br/>
-                  ❌ "I have never seen this PDF. Let me guess the policy based on standard guidelines..." (Generates fake answers!)
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+<body class="anim-deck" style="overflow-x: hidden; min-height: 100vh;">
+  <!-- Ambient Backdrop Orbs -->
+  <div class="orb orb-a" aria-hidden="true" style="background: rgba(99, 102, 241, 0.12); width: 450px; height: 450px;"></div>
+  <div class="orb orb-b" aria-hidden="true" style="background: rgba(16, 185, 129, 0.08); width: 500px; height: 500px;"></div>
 
-        <!-- SECTION 2: RETRIEVAL-AUGMENTED GENERATION (RAG) -->
-        <section data-transition="slide-in fade-out">
-          <div class="badge badge-rag">Part 1: RAG</div>
-          <h2 class="rag-header">Why RAG is the Solution</h2>
-          <p>Instead of relying on pure "guessing", <strong>Retrieval-Augmented Generation</strong> grounds the LLM using a <strong>"Search + Answer"</strong> flow.</p>
-          <div class="slide-cols" style="margin-top: 1.5rem;">
-            <div class="col glass-panel glass-panel-rag">
-              <h3 style="color:#a78bfa; margin-bottom: 0.5rem;">🔍 1. Retrieve</h3>
-              <p style="font-size:0.8em;">Reads local files (PDFs, DOCX, Databases) and fetches chunks containing the exact facts matching the user's query.</p>
-            </div>
-            <div class="col glass-panel glass-panel-rag">
-              <h3 style="color:#a78bfa; margin-bottom: 0.5rem;">⚙️ 2. Augment</h3>
-              <p style="font-size:0.8em;">Stitches the retrieved raw text documents directly into the LLM prompt, providing real-time grounding facts.</p>
-            </div>
-            <div class="col glass-panel glass-panel-rag">
-              <h3 style="color:#a78bfa; margin-bottom: 0.5rem;">✍️ 3. Generate</h3>
-              <p style="font-size:0.8em;">The LLM synthesizes a 100% grounded response, directly backed by the retrieved external knowledge sources.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- RAG ARCHITECTURE DIAGRAM -->
-        <section data-transition="fade-in slide-out">
-          <div class="badge badge-rag">RAG Architecture</div>
-          <h2 class="rag-header">The Semantic Retrieval Pipeline</h2>
-          <div class="slide-cols" style="align-items: center;">
-            <div class="col" style="flex: 1.2;">
-              <div class="flow-diagram">
-                <div class="flow-node flow-node-rag fragment" data-fragment-index="1">User Query</div>
-                <div class="flow-arrow fragment" data-fragment-index="2">↓</div>
-                <div class="flow-node flow-node-rag fragment" data-fragment-index="2">Embedding Model (Text Vectorization)</div>
-                <div class="flow-arrow fragment" data-fragment-index="3">↓</div>
-                <div class="flow-node flow-node-rag fragment" data-fragment-index="3">Vector Search (FAISS Index Lookup)</div>
-                <div class="flow-arrow fragment" data-fragment-index="4">↓</div>
-                <div class="flow-node flow-node-rag fragment" data-fragment-index="4">Relevant Chunks Retrieved &amp; Loaded</div>
-                <div class="flow-arrow fragment" data-fragment-index="5">↓</div>
-                <div class="flow-node flow-node-rag fragment" data-fragment-index="5">LLM Generates Grounded Answer</div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="glass-panel" style="font-size: 0.8em;">
-                <h4 style="color:#fff; margin-bottom: 0.5rem;">How it fits together:</h4>
-                <p>Vector databases index document meanings. When a user asks a question, the vector similarity matching locates the exact chunk of text needed in milliseconds.</p>
-                <div class="img-container" style="height: 160px; margin-top: 1rem;">
-                  <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Server room glowing blue" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- RAG STEP-BY-STEP IMPLEMENTATION -->
-        <section data-transition="convex">
-          <div class="badge badge-rag">How RAG Works</div>
-          <h2 class="rag-header">Step-by-Step Implementation</h2>
-          <div class="steps-grid">
-            <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.2);">
-              <span class="step-num">01</span>
-              <span class="step-title">Load Documents</span>
-              <span class="step-desc">Incorporate external files: PDFs, DOCX, corporate database records, or wiki files.</span>
-            </div>
-            <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.2);">
-              <span class="step-num">02</span>
-              <span class="step-title">Document Chunking</span>
-              <span class="step-desc">Split documents into bite-sized, overlapping pieces (e.g. Chunk 1: Intro, Chunk 2: Settings).</span>
-            </div>
-            <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.2);">
-              <span class="step-num">03</span>
-              <span class="step-title">Generate Embeddings</span>
-              <span class="step-desc">Encode text chunks into high-dimensional vectors representing semantic meaning.</span>
-            </div>
-            <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.3);">
-              <span class="step-num">04</span>
-              <span class="step-title">Store in FAISS</span>
-              <span class="step-desc">Store vectors in index structures optimized for fast spatial similarity lookups.</span>
-            </div>
-            <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.3);">
-              <span class="step-num">05</span>
-              <span class="step-title">Query Retrieval</span>
-              <span class="step-desc">Vectorize user queries and fetch the top matching vectors (semantic search).</span>
-            </div>
-            <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.3);">
-              <span class="step-num">06</span>
-              <span class="step-title">LLM Grounding</span>
-              <span class="step-desc">Combine retrieved contexts + user query into a secure prompt to synthesize answers.</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION 3: AGENTIC AI ARCHITECTURE -->
-        <section data-transition="slide-in fade-out">
-          <div class="badge badge-agent">Part 2: Agents</div>
-          <h2 class="agent-header">Why Agentic AI Is Needed</h2>
-          <div class="slide-cols">
-            <div class="col" style="flex:1.2;">
-              <p>While RAG connects LLMs to text search, **Agentic AI** allows the model to act as a dynamic brain, executing multi-step workflows and using tools.</p>
-              <div class="glass-panel glass-panel-agent" style="margin-top: 1rem;">
-                <h4 style="color:var(--agent-accent); margin-bottom: 0.5rem;">📋 Simple Example:</h4>
-                <p style="font-size: 0.8em; font-style: italic;">
-                  “Read emails → extract invoice details → update the sales database → send a Slack notification”
-                </p>
-                <p style="font-size: 0.78em; margin-top: 0.5rem; color: #fff;">
-                  This requires logical decision loops, integrations, and tool calls. That is where agents excel.
-                </p>
-              </div>
-            </div>
-            <div class="col">
-              <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Cybernetic nodes grid background" />
-                <div class="img-label">Agentic Autonomous Loops</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- AGENT CORE COMPONENTS -->
-        <section data-transition="slide-in fade-out">
-          <div class="badge badge-agent">Agent Architecture</div>
-          <h2 class="agent-header">Core Components of an AI Agent</h2>
-          <div class="slide-cols" style="margin-top: 1rem;">
-            <div class="col glass-panel" style="border-top: 3px solid #3b82f6;">
-              <h3 style="color:#60a5fa; font-size:1.2rem;">🧠 1. Planning</h3>
-              <p style="font-size:0.75em; margin-top:0.25rem;">
-                Decomposes complex problems. ReAct frameworks allow agents to write thoughts, execute tools, evaluate results, and update their plans.
-              </p>
-            </div>
-            <div class="col glass-panel" style="border-top: 3px solid #10b981;">
-              <h3 style="color:#34d399; font-size:1.2rem;">💾 2. Memory</h3>
-              <p style="font-size:0.75em; margin-top:0.25rem;">
-                <strong>Short-term:</strong> Interactive chat session state.<br/>
-                <strong>Long-term:</strong> Storing past executions in vector databases for historical recall.
-              </p>
-            </div>
-            <div class="col glass-panel" style="border-top: 3px solid #a78bfa;">
-              <h3 style="color:#c084fc; font-size:1.2rem;">🛠️ 3. Tools</h3>
-              <p style="font-size:0.75em; margin-top:0.25rem;">
-                Equips the LLM with superpowers: Database SQL runners, Email APIs, Web Search engines, Code interpreters, and CLI executors.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- TYPICAL AGENT FLOW -->
-        <section data-transition="fade-in slide-out">
-          <div class="badge badge-agent">Agent Lifecycle</div>
-          <h2 class="agent-header">Typical Agent Execution Loop</h2>
-          <div class="slide-cols" style="align-items: center;">
-            <div class="col">
-              <div class="flow-diagram">
-                <div class="flow-node flow-node-agent fragment" data-fragment-index="1">User Request (High-Level Goal)</div>
-                <div class="flow-arrow fragment" data-fragment-index="2">↓</div>
-                <div class="flow-node flow-node-agent fragment" data-fragment-index="2">Planner (Task Breakdown)</div>
-                <div class="flow-arrow fragment" data-fragment-index="3">↓</div>
-                <div class="flow-node flow-node-agent fragment" data-fragment-index="3">Tool Selection &amp; Execution</div>
-                <div class="flow-arrow fragment" data-fragment-index="4">↓</div>
-                <div class="flow-node flow-node-agent fragment" data-fragment-index="4">Memory &amp; Evaluation Update</div>
-                <div class="flow-arrow fragment" data-fragment-index="5">↓</div>
-                <div class="flow-node flow-node-agent fragment" data-fragment-index="5">Final Grounded Response</div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="glass-panel" style="font-size: 0.8em; border-left: 4px solid var(--agent-accent);">
-                <h4 style="color:#fff; margin-bottom: 0.5rem;">Self-Critique &amp; Execution:</h4>
-                <p>Unlike sequential scripts, agents can observe if a tool execution failed (e.g. database syntax error), rewrite their query, and try again until the goal is achieved.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION 4: HANDS-ON PROJECTS -->
-        <section data-transition="convex">
-          <div class="badge badge-rag">Project 1: RAG</div>
-          <h2>PDF-Based Company Assistant</h2>
-          <div class="slide-cols">
-            <div class="col" style="flex:1.4;">
-              <p style="font-size: 0.9em;">Build a Q&amp;A tool for HR handbooks or engineering documentation:</p>
-              
-              <table style="margin-top: 0.5rem;">
-                <thead>
-                  <tr>
-                    <th>Component</th>
-                    <th>Technology</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Backend</strong></td>
-                    <td>Python FastAPI</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Vector Store</strong></td>
-                    <td>FAISS Indexer</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Embeddings</strong></td>
-                    <td>Sentence Transformers (Sentence-BERT)</td>
-                  </tr>
-                  <tr>
-                    <td><strong>LLM API</strong></td>
-                    <td>Ollama (Local Gemma/Llama) or OpenAI</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <div class="col">
-              <div class="glass-panel" style="font-size: 0.75em;">
-                <h4 style="color:var(--rag-accent); margin-bottom:0.25rem;">Hands-on Flow:</h4>
-                <ol style="margin-left: 1rem; line-height: 1.45;">
-                  <li>Upload PDF (Handbook)</li>
-                  <li>Extract lines (PyPDF2)</li>
-                  <li>Chunk text (500 size, 50 overlap)</li>
-                  <li>Generate Vector embeddings</li>
-                  <li>Write vectors into local FAISS db</li>
-                  <li>Ask: "What is the leave policy?"</li>
-                  <li>Fetch context &amp; prompt local LLM</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- PROJECT 2: MULTI-STEP AUTOMATION AGENT -->
-        <section data-transition="convex">
-          <div class="badge badge-agent">Project 2: Agents</div>
-          <h2>Multi-Step Dev Assistant</h2>
-          <div class="slide-cols">
-            <div class="col" style="flex: 1.2;">
-              <p style="font-size: 0.85em;">An agent that extracts API specifications and writes structured code autonomously:</p>
-              <div class="glass-panel" style="font-size: 0.75em;">
-                <h4 style="color:var(--agent-accent); margin-bottom:0.25rem;">Multi-Agent Workflow:</h4>
-                <pre style="margin-top: 0.25rem;"><code class="hljs plaintext">Requirement Document (PDF)
-  ↓ [Requirement Extraction Agent]
-API Design Specs
-  ↓ [API Design Agent]
-Spring Boot Code Skeleton
-  ↓ [Code Generation &amp; Testing Agents]
-Fully Documented Code base</code></pre>
-              </div>
-            </div>
-            <div class="col">
-              <table style="font-size: 0.8em;">
-                <thead>
-                  <tr>
-                    <th>Layer</th>
-                    <th>Tools</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Framework</strong></td>
-                    <td>LangGraph / CrewAI</td>
-                  </tr>
-                  <tr>
-                    <td><strong>LLM</strong></td>
-                    <td>GPT-4 / Claude 3.5 Sonnet</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Memory</strong></td>
-                    <td>Redis persistence</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Tools</strong></td>
-                    <td>GitHub API, Local FS</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECTION 5: WHEN TO USE AND WHEN NOT TO USE -->
-        <section data-transition="slide-in fade-out">
-          <div class="badge badge-warning">Decision Matrix</div>
-          <h2>Use RAG vs. Agentic AI?</h2>
-          <div class="slide-cols" style="font-size: 0.8em; margin-top: 1rem;">
-            <div class="col glass-panel" style="border-top: 3px solid var(--rag-accent);">
-              <h3 style="color:#a78bfa; font-size:1.15rem; margin-bottom:0.5rem;">💡 Use RAG When</h3>
-              <ul class="check-list">
-                <li>You have rich text files (PDFs, Wikis)</li>
-                <li>Data gets updated frequently</li>
-                <li>You need to search across large enterprise files</li>
-                <li>Preventing hallucination is highly critical</li>
-              </ul>
-              <div style="margin-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem; font-size:0.85em;">
-                <strong>Examples:</strong> HR handbook bot, Tech support FAQ.
-              </div>
-            </div>
-            
-            <div class="col glass-panel" style="border-top: 3px solid var(--agent-accent);">
-              <h3 style="color:#34d399; font-size:1.15rem; margin-bottom:0.5rem;">💡 Use Agents When</h3>
-              <ul class="check-list">
-                <li>Multi-step workflows are required</li>
-                <li>Logic decisions are needed at runtime</li>
-                <li>Integration with local files / APIs is necessary</li>
-                <li>Tasks require planning and self-critique loops</li>
-              </ul>
-              <div style="margin-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.5rem; font-size:0.85em;">
-                <strong>Examples:</strong> DevOps pipelines, Autonomous writing bots.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- WHEN NOT TO USE -->
-        <section data-transition="slide-in fade-out">
-          <div class="badge badge-warning">Limits &amp; Warning</div>
-          <h2>When NOT to deploy them?</h2>
-          <div class="slide-cols" style="font-size: 0.78em; margin-top: 0.5rem;">
-            <div class="col glass-panel" style="border-top: 3px dashed rgba(239, 68, 68, 0.5);">
-              <h4 style="color:var(--warn-accent); margin-bottom: 0.25rem;">❌ Avoid RAG When:</h4>
-              <ul class="cross-list" style="margin-left: 0.5rem;">
-                <li>The data is small and static (Simple prompting is enough)</li>
-                <li>Very low latency is needed (Retrieval + Embeddings add lag)</li>
-                <li>Database changes rarely (Index overhead is unnecessary)</li>
-              </ul>
-            </div>
-            
-            <div class="col glass-panel" style="border-top: 3px dashed rgba(239, 68, 68, 0.5);">
-              <h4 style="color:var(--warn-accent); margin-bottom: 0.25rem;">❌ Avoid Agents When:</h4>
-              <ul class="cross-list" style="margin-left: 0.5rem;">
-                <li>Tasks are single-step (Translate, summarize)</li>
-                <li>Workflows are strictly deterministic (Normal code is better)</li>
-                <li>High-risk critical systems (Medical control, Banking triggers)</li>
-              </ul>
-            </div>
-          </div>
-          <div class="glass-panel" style="margin-top: 1rem; text-align: center; font-size: 0.85em; border-left: 4px solid var(--warn-accent);">
-            ⚠️ <strong>Risk Warning:</strong> Agents can misuse tools or execute unexpected code loops. Always build secure sandbox runtimes!
-          </div>
-        </section>
-
-        <!-- SUMMARY OF APPLICATIONS -->
-        <section data-transition="zoom">
-          <div class="badge badge-rag">Summary</div>
-          <h2>Real-World Landscape</h2>
-          <div class="slide-cols" style="font-size: 0.85em;">
-            <div class="col glass-panel">
-              <h4 style="color:var(--rag-accent); margin-bottom: 0.5rem;">RAG Applications</h4>
-              <ul style="margin-left: 1.25rem; line-height: 1.6;">
-                <li>ChatGPT with private company databases</li>
-                <li>Internal enterprise semantic search portals</li>
-                <li>AI-Powered document management systems</li>
-                <li>AI legal contract research assistants</li>
-              </ul>
-            </div>
-            <div class="col glass-panel">
-              <h4 style="color:var(--agent-accent); margin-bottom: 0.5rem;">Agentic AI Applications</h4>
-              <ul style="margin-left: 1.25rem; line-height: 1.6;">
-                <li>AI software engineers (Devin, OpenClaw)</li>
-                <li>Autonomous software testing &amp; validation bots</li>
-                <li>Research collectors &amp; document synthesizers</li>
-                <li>Autonomous CRM customer support engines</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <!-- OUTRO / THANK YOU -->
-        <section data-transition="zoom" style="text-align: center;">
-          <h1 style="font-size: 3.5rem; text-align: center;">Thank you!</h1>
-          <h3 style="text-align: center; color: var(--text-muted); font-size: 1.5rem;">Let's build context-aware, autonomous systems.</h3>
-          <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2.5rem;">
-            <div class="badge badge-rag" style="margin-bottom:0;">RAG Labs</div>
-            <div class="badge badge-agent" style="margin-bottom:0;">Agent Labs</div>
-          </div>
-        </section>
-
-      </div>
+  <div class="portal-wrapper">
+    <div class="portal-title-area">
+      <div class="badge badge-rag" style="border-color: rgba(99, 102, 241, 0.35); background: rgba(99, 102, 241, 0.1); margin-bottom: 1.25rem;">Day 4 Curriculum</div>
+      <h1>Beyond LLMs</h1>
+      <p>
+        Explore how to expand Large Language Models from static statistical brains into context-aware, autonomous systems that search, think, plan, and execute.
+      </p>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
-    <script>
-      Reveal.initialize({
-        hash: true,
-        slideNumber: true,
-        transition: "slide",
-        fragments: true,
-        controlsTutorial: true,
-        progress: true,
-        plugins: [RevealNotes, RevealHighlight],
-      });
-    </script>
-  </body>
+    <div class="portal-grid">
+      <!-- Card 1: Retrieval-Augmented Generation -->
+      <div class="portal-card portal-card-rag">
+        <div class="portal-card-content">
+          <h2>RAG Foundations</h2>
+          <p>
+            Ground LLMs in reality by coupling them with real-time vector search indexes. Learn to build local, private knowledge assistants that prevent hallucinations.
+          </p>
+          <ul class="portal-card-features">
+            <li>Core Semantic Retrieval Pipeline</li>
+            <li>Sliding-Window Document Chunking</li>
+            <li>Dense Semantic Vectors &amp; Embeddings</li>
+            <li>In-Memory FAISS Vector Databases</li>
+            <li>Interactive 6-Step Code Flow Simulator</li>
+          </ul>
+        </div>
+        <a href="rag.html" class="portal-btn portal-btn-rag">Launch RAG Slide Deck</a>
+      </div>
+
+      <!-- Card 2: Agentic AI -->
+      <div class="portal-card portal-card-agent">
+        <div class="portal-card-content">
+          <h2>Agentic AI</h2>
+          <p>
+            Equip models with dynamic decision loops, tool invocation frameworks, and persistent memory. Build agents that plan, iterate, and run multi-step automations.
+          </p>
+          <ul class="portal-card-features">
+            <li>ReAct (Reasoning &amp; Acting) Loop</li>
+            <li>Short-Term &amp; Long-Term Memory Architectures</li>
+            <li>Executable Tool Calling Systems &amp; APIs</li>
+            <li>State-Machine Graph Agent Frameworks</li>
+            <li>Multi-Agent Software Engineering Lab</li>
+          </ul>
+        </div>
+        <a href="agent.html" class="portal-btn portal-btn-agent">Launch Agentic AI Slide Deck</a>
+      </div>
+    </div>
+  </div>
+</body>
+
 </html>

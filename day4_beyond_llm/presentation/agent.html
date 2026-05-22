@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentic AI Architectures — Beyond LLMs</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="deck.css" />
+</head>
+
+<body class="anim-deck">
+  <!-- Ambient Backdrop Orbs -->
+  <div class="orb orb-a" aria-hidden="true" style="background: rgba(16, 185, 129, 0.08);"></div>
+  <div class="orb orb-b" aria-hidden="true" style="background: rgba(59, 130, 246, 0.06);"></div>
+
+  <!-- Floating Back to Portal Button -->
+  <a href="index.html" class="slide-back-home">⬅ Back to Portal</a>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title Deck -->
+      <section data-transition="zoom">
+        <div class="badge badge-agent">Lecture &amp; Lab</div>
+        <h1 style="background: linear-gradient(135deg, #34d399 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Agentic AI</h1>
+        <h3>Design patterns for autonomous planning &amp; execution</h3>
+        <div class="slide-cols" style="align-items: center; margin-top: 1.5rem;">
+          <div class="col" style="flex: 1.4;">
+            <p style="font-size: 1.05rem; margin-top: 0.5rem; line-height: 1.6;">
+              Equip Large Language Models with plans, memory stores, and APIs. Explore how ReAct reasoning loops enable models to autonomously iterate, critique, and achieve complex goals.
+            </p>
+            <div class="glass-panel glass-panel-agent" style="margin-top: 1.5rem; border-left: 4px solid var(--agent-accent); padding: 1rem;">
+              <strong style="color: #fff; font-size: 0.9rem;">Agenda:</strong>
+              <p style="font-size: 0.82rem; margin: 0.25rem 0 0 0;">
+                The Agent Framework → Planning &amp; ReAct Loops → Core Memory Systems → Tool Call Specs → Hands-On Lab
+              </p>
+            </div>
+          </div>
+          <div class="col">
+            <div class="img-container" style="height: 250px;">
+              <img
+                src="https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                alt="Cybernetic network nodes background" />
+              <div class="img-label">Autonomous Cognitive Loops</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Why Agentic AI Is Needed -->
+      <section data-transition="slide-in fade-out">
+        <div class="badge badge-agent">Evolution</div>
+        <h2 class="agent-header">Why Agentic AI Is Needed</h2>
+        <div class="slide-cols" style="align-items: center;">
+          <div class="col" style="flex:1.2;">
+            <p style="font-size: 0.95rem; line-height: 1.55;">
+              Vanilla LLMs and RAG pipelines are linear and reactive: they take input and immediately stream a response.
+            </p>
+            <div class="glass-panel glass-panel-agent" style="margin-top: 1rem; padding: 1.2rem;">
+              <h4 style="color:var(--agent-accent); margin-bottom: 0.4rem; font-size: 0.9rem;">📋 Multi-Step Enterprise Goal:</h4>
+              <p style="font-size: 0.82rem; font-style: italic; color: #fff; margin: 0;">
+                “Extract invoice PDF attachment from our emails ➔ calculate tax math ➔ update DB records ➔ ping manager on Slack.”
+              </p>
+              <p style="font-size: 0.78rem; margin-top: 0.6rem; line-height: 1.4; color: var(--text-muted);">
+                This is a long-horizon process. It requires conditional decisions, failures management, and dynamic tool interactions. Static prompting cannot achieve this — only <strong>Agentic AI</strong> can.
+              </p>
+            </div>
+          </div>
+          <div class="col">
+            <div class="img-container" style="height: 260px;">
+              <img
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                alt="Glowing computer hardware board" />
+              <div class="img-label">Multi-Step Execution Networks</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Core Components of an AI Agent -->
+      <section data-transition="slide-in fade-out">
+        <div class="badge badge-agent">Architecture</div>
+        <h2 class="agent-header">Core Components of an AI Agent</h2>
+        <p style="font-size: 0.95rem;">An autonomous agent is constructed of three foundational cognitive layers:</p>
+        <div class="slide-cols" style="margin-top: 1.5rem; gap: 1rem;">
+          <div class="col glass-panel" style="border-top: 3px solid #3b82f6; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem;">
+            <div>
+              <h3 style="color:#60a5fa; font-size:1.25rem; margin-bottom: 0.4rem;">🧠 1. Planning</h3>
+              <p style="font-size:0.75em; line-height: 1.45; color: var(--text-muted);">
+                Deconstructs high-level objectives. The model uses the <strong>ReAct</strong> (Reasoning + Acting) loop to write thoughts, run tools, observe outcomes, and self-correct.
+              </p>
+            </div>
+            <div style="font-size: 0.7rem; color: #60a5fa; margin-top: 0.5rem; font-weight: 500;">Dynamic Self-Correction</div>
+          </div>
+          <div class="col glass-panel" style="border-top: 3px solid #10b981; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem;">
+            <div>
+              <h3 style="color:#34d399; font-size:1.25rem; margin-bottom: 0.4rem;">💾 2. Memory</h3>
+              <p style="font-size:0.75em; line-height: 1.45; color: var(--text-muted);">
+                <strong>Short-Term:</strong> Active session buffers (chat history context). <br />
+                <strong>Long-Term:</strong> Persistent vector databases storing past traces and learnings for context retrieval.
+              </p>
+            </div>
+            <div style="font-size: 0.7rem; color: #34d399; margin-top: 0.5rem; font-weight: 500;">Persistent Semantic Storage</div>
+          </div>
+          <div class="col glass-panel" style="border-top: 3px solid #c084fc; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem;">
+            <div>
+              <h3 style="color:#c084fc; font-size:1.25rem; margin-bottom: 0.4rem;">🛠️ 3. Tools</h3>
+              <p style="font-size:0.75em; line-height: 1.45; color: var(--text-muted);">
+                Executable APIs that connect the model to the physical world: database query runners, script engines, email APIs, web search crawlers, or terminal command runtimes.
+              </p>
+            </div>
+            <div style="font-size: 0.7rem; color: #c084fc; margin-top: 0.5rem; font-weight: 500;">Actionable API Integrations</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Typical Agent Execution Lifecycle Diagram -->
+      <section data-transition="fade-in slide-out">
+        <div class="badge badge-agent">Execution Loop</div>
+        <h2 class="agent-header">Typical Agent Execution Loop</h2>
+        <div class="slide-cols" style="align-items: center;">
+          <div class="col" style="flex: 1.1;">
+            <div class="flow-diagram">
+              <div class="flow-node flow-node-agent fragment" data-fragment-index="1">User Request (e.g. "Deploy testing scripts")</div>
+              <div class="flow-arrow fragment" data-fragment-index="2">↓</div>
+              <div class="flow-node flow-node-agent fragment" data-fragment-index="2">Planner (Thought: Break into 3 sub-tasks)</div>
+              <div class="flow-arrow fragment" data-fragment-index="3">↓</div>
+              <div class="flow-node flow-node-agent fragment" data-fragment-index="3">Execution (Call local shell commands tool)</div>
+              <div class="flow-arrow fragment" data-fragment-index="4">↓</div>
+              <div class="flow-node flow-node-agent fragment" data-fragment-index="4">Critique (Observation: Error! Adjust parameters)</div>
+              <div class="flow-arrow fragment" data-fragment-index="5">↓</div>
+              <div class="flow-node flow-node-agent fragment" data-fragment-index="5">Success! Return final state confirmation</div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="glass-panel" style="font-size: 0.8em; line-height: 1.5; border-left: 4px solid var(--agent-accent);">
+              <h4 style="color:#fff; margin-bottom: 0.5rem;">Intelligent Auto-Retry:</h4>
+              <p>Standard software fails immediately when meeting syntax errors or unexpected API states. Agents analyze the stdout logs, rewrite their plan variables, and execute alternative solutions autonomously.</p>
+              <div class="img-container" style="height: 140px; margin-top: 1rem;">
+                <img
+                  src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                  alt="Code on screen" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Hands-On Project Overview -->
+      <section data-transition="convex">
+        <div class="badge badge-agent">Hands-on Lab</div>
+        <h2>Project: Multi-Step Dev Assistant</h2>
+        <div class="slide-cols" style="align-items: stretch;">
+          <div class="col" style="flex: 1.35;">
+            <p style="font-size: 0.85rem; line-height: 1.5;">An autonomous multi-agent developer team that extracts API specs and codes them:</p>
+            <div class="glass-panel" style="font-size: 0.72em; padding: 1rem 1.25rem;">
+              <h4 style="color:var(--agent-accent); margin-bottom:0.25rem; font-size: 0.85rem;">Multi-Agent Pipeline Graph:</h4>
+              <pre style="margin-top: 0.25rem; background: rgba(0,0,0,0.3); border: none;"><code class="hljs plaintext">Specification PDF Document
+  ↓ [Requirement Analyzer Agent]
+Structured API specs (YAML)
+  ↓ [Code Architect Agent]
+Spring Boot Skeleton File
+  ↓ [Testing &amp; QA Agent]
+Synthesized Complete Repository</code></pre>
+            </div>
+          </div>
+          <div class="col">
+            <table style="font-size: 0.75em; height: 100%;">
+              <thead>
+                <tr>
+                  <th>Framework Layer</th>
+                  <th>Module / Engine</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Agent Graph</strong></td>
+                  <td>LangGraph / CrewAI (State Node routes)</td>
+                </tr>
+                <tr>
+                  <td><strong>Models</strong></td>
+                  <td>GPT-4o or Claude 3.5 Sonnet (API)</td>
+                </tr>
+                <tr>
+                  <td><strong>Agent Tools</strong></td>
+                  <td>Local FileSystem write + Python Subprocess</td>
+                </tr>
+                <tr>
+                  <td><strong>State Memory</strong></td>
+                  <td>Persistent Redis checkpoints</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Decision Matrix -->
+      <section data-transition="slide-in fade-out">
+        <div class="badge badge-warning">Decision Architecture</div>
+        <h2>When to Deploy Agentic Loops?</h2>
+        <div class="slide-cols" style="font-size: 0.8em; margin-top: 1rem;">
+          <div class="col glass-panel" style="border-top: 4px solid var(--agent-accent);">
+            <h3 style="color:#34d399; font-size:1.15rem; margin-bottom:0.5rem;">✅ Ideal Use Cases</h3>
+            <ul class="check-list">
+              <li>Open-ended tasks requiring dynamic adjustments (e.g. full-repo coding, research gathers).</li>
+              <li>Multi-step workflows with conditional routing.</li>
+              <li>Complex problem-solving that requires integration with external files or dynamic APIs.</li>
+              <li>Tasks that benefit from human-in-the-loop validation checkpoints.</li>
+            </ul>
+          </div>
+
+          <div class="col glass-panel" style="border-top: 4px dashed rgba(239, 68, 68, 0.45);">
+            <h3 style="color:var(--warn-accent); font-size:1.15rem; margin-bottom:0.5rem;">❌ When NOT to use</h3>
+            <ul class="cross-list">
+              <li>Deterministic pipelines where static code, loops, or scripts handle everything reliably.</li>
+              <li>Single-step commands (e.g. basic translations, text summaries).</li>
+              <li>Mission-critical, high-risk production code triggers (e.g. clinical medicine dose controls, immediate banking settlement triggers).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Real-world Landscape -->
+      <section data-transition="zoom">
+        <div class="badge badge-agent">Applications</div>
+        <h2>Agents in Enterprise Industry</h2>
+        <div class="slide-cols" style="font-size: 0.82rem; margin-top: 0.5rem;">
+          <div class="col glass-panel">
+            <h4 style="color:var(--agent-accent); margin-bottom: 0.4rem; font-size: 0.95rem;">🤖 Autonomous Software Engineers</h4>
+            <p style="margin: 0; line-height: 1.45;">
+              Agents like Devin or OpenHands that scan codebases, find issues, construct unit tests, edit lines, run local builds, check lint errors, and push verified PR fixes autonomously.
+            </p>
+          </div>
+          <div class="col glass-panel">
+            <h4 style="color:var(--agent-accent); margin-bottom: 0.4rem; font-size: 0.95rem;">📊 Auto-Advisors &amp; Researchers</h4>
+            <p style="margin: 0; line-height: 1.45;">
+              Financial agents that crawl active market pages, read news alerts, extract metrics, summarize risks, backtest against historic prices, and generate exhaustive investment reports.
+            </p>
+          </div>
+          <div class="col glass-panel">
+            <h4 style="color:var(--agent-accent); margin-bottom: 0.4rem; font-size: 0.95rem;">💼 Intelligent Sales Outreach</h4>
+            <p style="margin: 0; line-height: 1.45;">
+              Cognitive agents that research target LinkedIn profiles, customize outbound pitches, write drafts, handle replies, schedule calendars, and log outcomes in CRM databases.
+            </p>
+          </div>
+        </div>
+        <div class="glass-panel glass-panel-agent" style="padding: 0.85rem 1.25rem; font-size: 0.78em; margin-top: 1rem; text-align: center; font-weight: 500; border-left: 4px solid var(--warn-accent);">
+          ⚠️ <strong>Security Advisory:</strong> Agents executing actions must run inside heavily restricted, sandboxed environments to prevent recursive loops or data wipe failures.
+        </div>
+      </section>
+
+      <!-- Slide 8: Outro -->
+      <section data-transition="zoom" style="text-align: center;">
+        <h1 style="font-size: 3.5rem; text-align: center;">Autonomous Horizons</h1>
+        <h3 style="text-align: center; color: var(--text-muted); font-size: 1.5rem; margin-top: 1rem;">You've completed the Agentic AI presentation.</h3>
+        <p style="font-size: 1rem; margin-top: 2rem; color: #34d399;">Let's build reliable, agentic systems. Ready to write code?</p>
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+          <a href="index.html" class="portal-btn portal-btn-agent" style="font-size: 0.95rem; padding: 0.6rem 1.5rem;">Return to Portal</a>
+          <a href="rag.html" class="portal-btn portal-btn-rag" style="font-size: 0.95rem; padding: 0.6rem 1.5rem;">Explore RAG Deck</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: "slide",
+      fragments: true,
+      controlsTutorial: true,
+      progress: true,
+      plugins: [RevealNotes, RevealHighlight],
+    });
+  </script>
+</body>
+
+</html>

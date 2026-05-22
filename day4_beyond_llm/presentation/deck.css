@@ -7,14 +7,17 @@
   --bg-secondary: #131a2e;
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
-  
-  --rag-glow: rgba(124, 58, 237, 0.15); /* Purple */
+
+  --rag-glow: rgba(124, 58, 237, 0.15);
+  /* Purple */
   --rag-accent: #8b5cf6;
-  
-  --agent-glow: rgba(16, 185, 129, 0.15); /* Emerald */
+
+  --agent-glow: rgba(16, 185, 129, 0.15);
+  /* Emerald */
   --agent-accent: #10b981;
-  
-  --warn-glow: rgba(239, 68, 68, 0.15); /* Red */
+
+  --warn-glow: rgba(239, 68, 68, 0.15);
+  /* Red */
   --warn-accent: #ef4444;
 
   --accent-blue: #3b82f6;
@@ -24,8 +27,8 @@
   font-family: "Outfit", system-ui, sans-serif;
   color: var(--text-main);
   background: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
-              radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
-              var(--bg-primary);
+    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+    var(--bg-primary);
 }
 
 .reveal .slides section {
@@ -235,14 +238,31 @@
 
 /* Animations */
 @keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, 30px) scale(1.1); }
-  100% { transform: translate(-20px, 50px) scale(0.95); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(40px, 30px) scale(1.1);
+  }
+
+  100% {
+    transform: translate(-20px, 50px) scale(0.95);
+  }
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 0.6; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(3px); }
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(3px);
+  }
 }
 
 /* Slide media / Image styling */
@@ -283,7 +303,7 @@
   background: rgba(15, 23, 42, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
   margin-top: 1rem;
 }
 
@@ -372,4 +392,357 @@
   font-size: 0.75em;
   color: var(--text-muted);
   line-height: 1.35;
+}
+
+/* Interactive Code Flow Visualizer */
+.code-flow-slide .slide-cols {
+  height: 520px;
+  align-items: stretch;
+}
+
+.code-flow-slide .col {
+  height: 100%;
+}
+
+.editor-header {
+  background: rgba(15, 23, 42, 0.4);
+  padding: 0.5rem 1rem;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.editor-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.editor-dot.red { background: #ef4444; }
+.editor-dot.yellow { background: #f59e0b; }
+.editor-dot.green { background: #10b981; }
+
+.editor-code {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  padding: 1rem;
+  overflow-y: auto;
+  height: calc(100% - 35px);
+  box-sizing: border-box;
+}
+
+.code-segment {
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.6rem;
+  border-radius: 6px;
+  border-left: 3px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0.25;
+}
+
+.code-segment.active {
+  opacity: 1;
+  background: rgba(139, 92, 246, 0.12);
+  border-left-color: var(--rag-accent);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1);
+  transform: translateX(4px);
+}
+
+.code-segment code {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 0.52em !important;
+  line-height: 1.4 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Syntax Highlighting Utilities for Mock Editor */
+.code-comment { color: #6b7280; font-style: italic; }
+.code-keyword { color: #f472b6; font-weight: bold; }
+.code-func { color: #60a5fa; font-weight: bold; }
+.code-string { color: #34d399; }
+.code-number { color: #f59e0b; }
+
+/* Interactive Pipeline Visualizer */
+.pipeline-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0.25rem 0;
+  box-sizing: border-box;
+}
+
+.pipeline-node {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  padding: 0.45rem 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pipeline-node.active {
+  border-color: var(--rag-accent) !important;
+  background: rgba(139, 92, 246, 0.25) !important;
+  box-shadow: 0 0 20px var(--rag-glow) !important;
+  transform: scale(1.03);
+}
+
+.pipeline-node.completed {
+  border-color: rgba(139, 92, 246, 0.45) !important;
+  background: rgba(139, 92, 246, 0.08) !important;
+  opacity: 0.8;
+}
+
+.pipeline-arrow {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  opacity: 0.25;
+  transition: all 0.3s ease;
+  margin: -0.2rem 0;
+}
+
+.pipeline-arrow.completed {
+  color: var(--rag-accent) !important;
+  opacity: 1 !important;
+  font-weight: bold;
+}
+
+/* Presentation Launch Portal Layout */
+.portal-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+  z-index: 1;
+  position: relative;
+}
+
+.portal-title-area {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.portal-title-area h1 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #a78bfa 0%, #34d399 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 40px rgba(99, 102, 241, 0.15);
+}
+
+.portal-title-area p {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1050px;
+}
+
+.portal-card {
+  background: rgba(19, 26, 46, 0.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+  height: 480px;
+  box-sizing: border-box;
+}
+
+.portal-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  transition: all 0.4s ease;
+}
+
+.portal-card-rag::before {
+  background: linear-gradient(90deg, transparent, var(--rag-accent), transparent);
+}
+
+.portal-card-agent::before {
+  background: linear-gradient(90deg, transparent, var(--agent-accent), transparent);
+}
+
+.portal-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.portal-card-rag:hover {
+  box-shadow: 0 30px 60px rgba(124, 58, 237, 0.18), 0 0 40px rgba(124, 58, 237, 0.08);
+  background: rgba(25, 20, 50, 0.45);
+}
+
+.portal-card-agent:hover {
+  box-shadow: 0 30px 60px rgba(16, 185, 129, 0.18), 0 0 40px rgba(16, 185, 129, 0.08);
+  background: rgba(16, 35, 30, 0.45);
+}
+
+.portal-card-content h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  border: none;
+  padding: 0;
+}
+
+.portal-card-rag h2 {
+  background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.portal-card-agent h2 {
+  background: linear-gradient(135deg, #ffffff 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.portal-card-content p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.portal-card-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem 0;
+}
+
+.portal-card-features li {
+  position: relative;
+  padding-left: 2rem;
+  font-size: 0.95rem;
+  color: #e5e7eb;
+  margin-bottom: 0.75rem;
+  font-family: "Outfit", sans-serif;
+}
+
+.portal-card-features li::before {
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+.portal-card-rag .portal-card-features li::before {
+  content: "✦";
+  color: var(--rag-accent);
+}
+
+.portal-card-agent .portal-card-features li::before {
+  content: "⚡";
+  color: var(--agent-accent);
+}
+
+.portal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border-radius: 14px;
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.portal-btn-rag {
+  background: rgba(139, 92, 246, 0.15);
+  color: #c084fc;
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
+}
+
+.portal-btn-rag:hover {
+  background: #8b5cf6;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+  transform: translateY(-2px);
+}
+
+.portal-btn-agent {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+}
+
+.portal-btn-agent:hover {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Slide back button for isolated slides */
+.slide-back-home {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 999;
+  background: rgba(19, 26, 46, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+}
+
+.slide-back-home:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(19, 26, 46, 0.95);
+  transform: translateY(-1px);
 }

@@ -50,7 +50,9 @@ def load_pdf_text(pdf_path: str) -> str:
         page_text = page.extract_text()
         if page_text:
             text.append(page_text)
-    return "\n".join(text)
+    result = "\n".join(text)
+    print(result)
+    return result
 
 
 def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100):
@@ -64,6 +66,8 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100):
         chunks.append(chunk)
         start += chunk_size - overlap
 
+    print("================================")
+    print(chunks)
     return chunks
 
 
@@ -91,6 +95,8 @@ def retrieve_chunks(query, chunks, index, embed_model, top_k=3):
         if i != -1:
             results.append(chunks[i])
 
+    print("================================")
+    print(results)
     return results
 
 
@@ -163,18 +169,99 @@ if __name__ == "__main__":
 
 ---
 
-## 5) How it works
+## 5) Code-Wise Step-by-Step Explanation
 
-### Embedding model
-`SentenceTransformer("all-MiniLM-L6-v2")` converts each chunk into a vector.
-
-### FAISS
-FAISS stores vectors and finds the most similar chunks quickly.
-
-### Generation model
-`flan-t5-base` reads the retrieved context and creates the final answer.
+Following the RAG architecture outlined in the RAG System [README.md](file:///Users/harinikesh/Downloads/Project/gen-ai-notebook/day4_beyond_llm/RAG_system/README.md), let's trace how the Python code implements each of the **6 core steps** of RAG:
 
 ---
+
+### Step 1 — Load Documents (`load_pdf_text`)
+*   **The Code:**
+    ```python
+    def load_pdf_text(pdf_path: str) -> str:
+        reader = PdfReader(pdf_path)
+        ...
+        result = "\n".join(text)
+        print(result)
+        return result
+    ```
+*   **High-Level Explanation:** Opens and reads the local PDF file (`Employee-Handbook.pdf`) page-by-page using the `pypdf` library. It extracts raw text from each page, combines them using newlines, prints it for visual verification, and returns the full aggregated document string.
+
+---
+
+### Step 2 — Chunking (`chunk_text`)
+*   **The Code:**
+    ```python
+    def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100):
+        ...
+        print("================================")
+        print(chunks)
+        return chunks
+    ```
+*   **High-Level Explanation:** Splits the raw aggregated text into manageable, smaller segments of words (chunks).
+    *   `chunk_size = 250` words ensures each piece stays well within the LLM's context window.
+    *   `overlap = 50` words acts as a sliding window buffer, ensuring sentences are not awkwardly split at hard boundaries and context is preserved between consecutive chunks.
+
+---
+
+### Step 3 — Generate Embeddings (`SentenceTransformer`)
+*   **The Code:**
+    ```python
+    embed_model = SentenceTransformer("all-MiniLM-L6-v2")
+    embeddings = embed_model.encode(chunks, convert_to_numpy=True)
+    ```
+*   **High-Level Explanation:** Converts our textual document chunks into dense mathematical vectors (embeddings) using the `all-MiniLM-L6-v2` transformer model. Each embedding captures the semantic meaning of its chunk, allowing the system to understand *concepts* rather than just keyword matches.
+
+---
+
+### Step 4 — Store in FAISS (`build_faiss_index`)
+*   **The Code:**
+    ```python
+    faiss.normalize_L2(embeddings)
+    index = faiss.IndexFlatIP(dimension)
+    index.add(embeddings)
+    ```
+*   **High-Level Explanation:** Stores the generated vectors into an in-memory vector database using FAISS (Facebook AI Similarity Search). Before indexing, we perform L2 normalization to convert standard distance search into Cosine Similarity matching. The `IndexFlatIP` (Flat Inner Product) index allows exact brute-force similarity lookup.
+
+---
+
+### Step 5 — Query Retrieval (`retrieve_chunks`)
+*   **The Code:**
+    ```python
+    def retrieve_chunks(query, chunks, index, embed_model, top_k=3):
+        query_embedding = embed_model.encode([query], convert_to_numpy=True)
+        faiss.normalize_L2(query_embedding)
+        scores, indices = index.search(query_embedding, top_k)
+        ...
+        print("================================")
+        print(results)
+        return results
+    ```
+*   **High-Level Explanation:** When a user enters a query:
+    1.  The query is converted into an embedding using the same `SentenceTransformer`.
+    2.  `index.search()` does a vector search in FAISS to find the top `top_k` (3) most semantically similar chunks.
+    3.  The raw text contents of these matching chunks are retrieved and displayed on the terminal.
+
+---
+
+### Step 6 — LLM Generation (`answer_question` & Flan-T5)
+*   **The Code:**
+    ```python
+    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+    ...
+    outputs = model.generate(**inputs, max_new_tokens=150, do_sample=False)
+    ```
+*   **High-Level Explanation:** Combines the retrieved context chunks and the user's question into a strict instruction template (Prompt). This prompt is sent to `google/flan-t5-base` (loaded locally with tokenizer/model). The local sequence-to-sequence model performs autoregressive token generation to draft a grounded response using *only* the retrieved context, eliminating hallucinations.
+
+---
+
+### 🛠️ The macOS Threading Fix & Interactive Loop
+*   **Environment Workaround:** On macOS environments running Python 3.13, PyTorch's OpenMP backend can segfault when deserializing large weight files. Adding `torch.set_num_threads(1)` limits loading to a single stable thread, avoiding this conflict completely.
+*   **Interactive Input Loop:** A simple CLI `while True` loop keeps the application active for multiple questions. Wrapping the input in a `try...except (EOFError, KeyboardInterrupt)` block gracefully handles program interrupts (e.g. `Ctrl+C` or piped EOF) by printing `Exiting...` rather than raising a long, intimidating python stack trace.
+
+---
+
 
 ## 6) Example of a good test document
 

@@ -18,7 +18,9 @@ def load_pdf_text(pdf_path: str) -> str:
         page_text = page.extract_text()
         if page_text:
             text.append(page_text)
-    return "\n".join(text)
+    result = "\n".join(text)
+    print(result)
+    return result
 
 
 def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100):
@@ -32,6 +34,8 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 100):
         chunks.append(chunk)
         start += chunk_size - overlap
 
+    print("================================")
+    print(chunks)
     return chunks
 
 
@@ -59,6 +63,8 @@ def retrieve_chunks(query, chunks, index, embed_model, top_k=3):
         if i != -1:
             results.append(chunks[i])
 
+    print("================================")
+    print(results)
     return results
 
 

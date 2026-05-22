@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAG Foundations — Beyond LLMs</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="deck.css" />
+</head>
+
+<body class="anim-deck">
+  <!-- Ambient Backdrop Orbs -->
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+
+  <!-- Floating Back to Portal Button -->
+  <a href="index.html" class="slide-back-home">⬅ Back to Portal</a>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title Deck -->
+      <section data-transition="zoom">
+        <div class="badge badge-rag">Lecture &amp; Lab</div>
+        <h1>Retrieval-Augmented Generation</h1>
+        <h3>Bridging static LLMs with dynamic private data</h3>
+        <div class="slide-cols" style="align-items: center; margin-top: 1.5rem;">
+          <div class="col" style="flex: 1.4;">
+            <p style="font-size: 1.05rem; margin-top: 0.5rem; line-height: 1.6;">
+              Learn how to ground AI brains in verifiable facts. We will explore semantic indexing, similarity math, vector databases, and build a local, zero-leak PDF assistant.
+            </p>
+            <div class="glass-panel glass-panel-rag" style="margin-top: 1.5rem; border-left: 4px solid var(--rag-accent); padding: 1rem;">
+              <strong style="color: #fff; font-size: 0.9rem;">Agenda:</strong>
+              <p style="font-size: 0.82rem; margin: 0.25rem 0 0 0;">
+                The LLM Boundary → Chunking &amp; Vectors → FAISS Indexes → Interactive Code Walkthrough → Deployment
+              </p>
+            </div>
+          </div>
+          <div class="col">
+            <div class="img-container" style="height: 250px;">
+              <img
+                src="https://images.unsplash.com/photo-1544383835-bda2bc66a55d?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                alt="Digital nodes connecting" />
+              <div class="img-label">Grounding AI in Reality</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: The Challenge -->
+      <section data-transition="slide-in fade-out">
+        <div class="badge badge-warning">The Challenge</div>
+        <h2>What limits traditional LLMs?</h2>
+        <div class="slide-cols">
+          <div class="col" style="flex: 1.2;">
+            <p>Vanilla Large Language Models are highly capable, but face severe architectural boundaries:</p>
+            <ul class="cross-list" style="font-size: 0.85em; margin-top: 0.8rem; line-height: 1.5;">
+              <li class="fragment"><strong>Knowledge Cutoffs:</strong> Fixed parameters restrict awareness to training dates.</li>
+              <li class="fragment"><strong>Information Gaps:</strong> Cannot naturally read private company PDFs, databases, or wikis.</li>
+              <li class="fragment"><strong>Hallucination Risks:</strong> Confidently invents plausible-sounding answers when lacking factual context.</li>
+              <li class="fragment"><strong>Trust Deficits:</strong> No citations or references are provided for claims.</li>
+            </ul>
+          </div>
+          <div class="col">
+            <div class="glass-panel" style="border-color: rgba(239, 68, 68, 0.25);">
+              <h4 style="color: var(--warn-accent); margin-bottom: 0.5rem; font-size: 1rem;">🚨 Fact Check Scenario</h4>
+              <p style="font-size: 0.8em; font-style: italic; color: #fff;">
+                "Explain casual leave policies in our 2026 handbook."
+              </p>
+              <div class="fragment"
+                style="margin-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem; font-size: 0.78em; line-height: 1.4;">
+                <strong>Vanilla LLM Attempt:</strong><br />
+                ❌ "I do not have access to your files, but typically casual leave is 10 days per year..." <br />
+                <span style="color: var(--warn-accent); font-weight: 500;">(Guesswork that violates corporate compliance!)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: Why RAG -->
+      <section data-transition="slide-in fade-out">
+        <div class="badge badge-rag">Core Mechanics</div>
+        <h2 class="rag-header">Why RAG is the Solution</h2>
+        <p style="font-size: 0.95rem;">Instead of guessing or expensive retraining, **RAG** grounds the model using a **"Search + Answer"** loop.</p>
+        
+        <div class="slide-cols" style="margin-top: 1.5rem; gap: 1rem;">
+          <div class="col glass-panel glass-panel-rag" style="display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem;">
+            <div>
+              <h3 style="color:#c084fc; font-size: 1.2rem; margin-bottom: 0.5rem;">🔍 1. Retrieve</h3>
+              <p style="font-size: 0.78em; line-height: 1.4;">
+                Scans local context directories (PDFs, Databases) and extracts the exact passages matching the user's question.
+              </p>
+            </div>
+            <div style="font-size: 0.7rem; color: #a78bfa; margin-top: 0.5rem; font-weight: 500;">Semantic Similarity search</div>
+          </div>
+          <div class="col glass-panel glass-panel-rag" style="display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem;">
+            <div>
+              <h3 style="color:#c084fc; font-size: 1.2rem; margin-bottom: 0.5rem;">⚙️ 2. Augment</h3>
+              <p style="font-size: 0.78em; line-height: 1.4;">
+                Stitches the retrieved passages directly into the prompt template as the authoritative, ground-truth context.
+              </p>
+            </div>
+            <div style="font-size: 0.7rem; color: #a78bfa; margin-top: 0.5rem; font-weight: 500;">Fact injection into Context Window</div>
+          </div>
+          <div class="col glass-panel glass-panel-rag" style="display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem;">
+            <div>
+              <h3 style="color:#c084fc; font-size: 1.2rem; margin-bottom: 0.5rem;">✍️ 3. Generate</h3>
+              <p style="font-size: 0.78em; line-height: 1.4;">
+                The LLM reads the context and drafts an answer, citing the facts. If the answer isn't present, it says "I don't know."
+              </p>
+            </div>
+            <div style="font-size: 0.7rem; color: #a78bfa; margin-top: 0.5rem; font-weight: 500;">Zero hallucination output</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Semantic Retrieval Pipeline Diagram -->
+      <section data-transition="fade-in slide-out">
+        <div class="badge badge-rag">Architecture</div>
+        <h2 class="rag-header">The Semantic Retrieval Pipeline</h2>
+        <div class="slide-cols" style="align-items: center;">
+          <div class="col" style="flex: 1.1;">
+            <div class="flow-diagram">
+              <div class="flow-node flow-node-rag fragment" data-fragment-index="1">User Query: "What is casual leave rule?"</div>
+              <div class="flow-arrow fragment" data-fragment-index="2">↓</div>
+              <div class="flow-node flow-node-rag fragment" data-fragment-index="2">Embedding Model (Encodes to Math Vector)</div>
+              <div class="flow-arrow fragment" data-fragment-index="3">↓</div>
+              <div class="flow-node flow-node-rag fragment" data-fragment-index="3">FAISS Index Lookup (Cosine Similarity)</div>
+              <div class="flow-arrow fragment" data-fragment-index="4">↓</div>
+              <div class="flow-node flow-node-rag fragment" data-fragment-index="4">Grounded Prompt (Query + Retrieved Context)</div>
+              <div class="flow-arrow fragment" data-fragment-index="5">↓</div>
+              <div class="flow-node flow-node-rag fragment" data-fragment-index="5">LLM Synthesizes Verified Answer</div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="glass-panel" style="font-size: 0.8em; line-height: 1.5;">
+              <h4 style="color:#fff; margin-bottom: 0.5rem;">How it fits together:</h4>
+              <p>Documents are vectorized and indexed offline. At runtime, the query is vectorized instantly and compared against millions of document vectors in milliseconds.</p>
+              <div class="img-container" style="height: 170px; margin-top: 1rem;">
+                <img
+                  src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&amp;fit=crop&amp;w=800&amp;q=80"
+                  alt="Glowing computer chip nodes" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Step-by-Step RAG Implementation -->
+      <section data-transition="convex">
+        <div class="badge badge-rag">Workflow</div>
+        <h2 class="rag-header">6 Steps of RAG Implementation</h2>
+        <div class="steps-grid">
+          <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.2);">
+            <span class="step-num">01</span>
+            <span class="step-title">Load PDFs</span>
+            <span class="step-desc">Open files page-by-page and extract raw, clean textual strings.</span>
+          </div>
+          <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.2);">
+            <span class="step-num">02</span>
+            <span class="step-title">Text Chunking</span>
+            <span class="step-desc">Break words into 250-word blocks with sliding 50-word overlaps.</span>
+          </div>
+          <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.2);">
+            <span class="step-num">03</span>
+            <span class="step-title">Create Embeddings</span>
+            <span class="step-desc">Convert words into dense 384D semantic vector coordinates.</span>
+          </div>
+          <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.35);">
+            <span class="step-num">04</span>
+            <span class="step-title">FAISS Indexing</span>
+            <span class="step-desc">Store vectorized nodes inside a normalized L2 coordinate matrix.</span>
+          </div>
+          <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.35);">
+            <span class="step-num">05</span>
+            <span class="step-title">Cosine Search</span>
+            <span class="step-desc">Query index to retrieve top 3 matching chunks of original text.</span>
+          </div>
+          <div class="step-card fragment" style="border-color: rgba(139, 92, 246, 0.35);">
+            <span class="step-num">06</span>
+            <span class="step-title">LLM Grounding</span>
+            <span class="step-desc">Format retrieved contexts and question, generating response locally.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: Hands-On Project Overview -->
+      <section data-transition="convex">
+        <div class="badge badge-rag">Hands-on Lab</div>
+        <h2>Project: HR Policy Assistant</h2>
+        <div class="slide-cols" style="align-items: stretch;">
+          <div class="col" style="flex:1.3;">
+            <p style="font-size: 0.88rem; line-height: 1.5;">Build an interactive, fully local terminal chatbot querying your HR company manual:</p>
+            <table style="margin-top: 0.5rem; font-size: 0.78em;">
+              <thead>
+                <tr>
+                  <th>Component</th>
+                  <th>Technology / Module</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>PDF Reader</strong></td>
+                  <td><code>pypdf.PdfReader</code> (pure-python extraction)</td>
+                </tr>
+                <tr>
+                  <td><strong>Semantic Vectors</strong></td>
+                  <td><code>sentence-transformers</code> (<code>all-MiniLM-L6-v2</code>)</td>
+                </tr>
+                <tr>
+                  <td><strong>Vector Lookup</strong></td>
+                  <td><code>faiss-cpu</code> (Fast vector math FlatIP index)</td>
+                </tr>
+                <tr>
+                  <td><strong>Grounded Generator</strong></td>
+                  <td><code>transformers</code> (<code>google/flan-t5-base</code> seq2seq)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col">
+            <div class="glass-panel" style="font-size: 0.72em; padding: 1.2rem; height: 100%; box-sizing: border-box;">
+              <h4 style="color:var(--rag-accent); margin-bottom:0.4rem; font-size: 0.85rem;">Key Testing Parameters:</h4>
+              <ol style="margin-left: 1.1rem; line-height: 1.5; color: var(--text-muted);">
+                <li>Download standard <em>Employee Handbook PDF</em>.</li>
+                <li>Verify clean parsing outputs on console logs.</li>
+                <li>Observe semantic vs keyword lookup behavior.</li>
+                <li>Compare Flan-T5 output with vanilla answers.</li>
+                <li>Verify safety bounds: "What is Python?" ➔ "I do not know."</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Interactive Code Execution Slide -->
+      <section class="code-flow-slide" data-transition="zoom-in slide-out">
+        <div class="badge badge-rag">Interactive Simulation</div>
+        <h2 class="rag-header" style="margin-bottom: 0.75rem;">Step-by-Step Code Execution Flow</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+          Press <strong style="color: #fff;">Space</strong> or <strong style="color: #fff;">→</strong> to trigger each pipeline phase and see the active code sync with the architecture diagram!
+        </p>
+
+        <!-- Hidden fragments to trigger state updates -->
+        <div class="fragment-triggers" style="display: none;">
+          <span class="fragment" data-fragment-index="1"></span>
+          <span class="fragment" data-fragment-index="2"></span>
+          <span class="fragment" data-fragment-index="3"></span>
+          <span class="fragment" data-fragment-index="4"></span>
+          <span class="fragment" data-fragment-index="5"></span>
+        </div>
+
+        <div class="slide-cols">
+          <!-- Left Column: Mock IDE Editor -->
+          <div class="col" style="flex: 1.15;">
+            <div class="editor-header">
+              <div class="editor-dot red"></div>
+              <div class="editor-dot yellow"></div>
+              <div class="editor-dot green"></div>
+              <span style="font-family: monospace; font-size: 0.65rem; color: var(--text-muted); margin-left: 8px;">app.py</span>
+            </div>
+            <div class="editor-code">
+              <!-- Segment 1 -->
+              <div class="code-segment active" id="seg-1">
+                <span class="code-comment"># STEP 1: Load text pages from local PDF</span><br />
+                <span class="code-keyword">def</span> <span class="code-func">load_pdf_text</span>(pdf_path):<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;reader = PdfReader(pdf_path)<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;text = [p.extract_text() <span class="code-keyword">for</span> p <span class="code-keyword">in</span> reader.pages]<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> <span class="code-string">"\n"</span>.join(text)
+              </div>
+              <!-- Segment 2 -->
+              <div class="code-segment" id="seg-2">
+                <span class="code-comment"># STEP 2: Slit words into sliding-window chunks</span><br />
+                <span class="code-keyword">def</span> <span class="code-func">chunk_text</span>(text, chunk_size=250, overlap=50):<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;words = text.split()<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;chunks = []<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> chunks
+              </div>
+              <!-- Segment 3 -->
+              <div class="code-segment" id="seg-3">
+                <span class="code-comment"># STEP 3: Encode chunks to float embeddings</span><br />
+                embed_model = SentenceTransformer(<span class="code-string">"all-MiniLM-L6-v2"</span>)<br />
+                embeddings = embed_model.encode(chunks, convert_to_numpy=<span class="code-keyword">True</span>)
+              </div>
+              <!-- Segment 4 -->
+              <div class="code-segment" id="seg-4">
+                <span class="code-comment"># STEP 4: Store in Cosine-Normalized FAISS index</span><br />
+                faiss.normalize_L2(embeddings)<br />
+                index = faiss.IndexFlatIP(embeddings.shape[<span class="code-number">1</span>])<br />
+                index.add(embeddings)
+              </div>
+              <!-- Segment 5 -->
+              <div class="code-segment" id="seg-5">
+                <span class="code-comment"># STEP 5: Cosine lookup query vector</span><br />
+                q_emb = embed_model.encode([query], convert_to_numpy=<span class="code-keyword">True</span>)<br />
+                faiss.normalize_L2(q_emb)<br />
+                scores, indices = index.search(q_emb, k=<span class="code-number">3</span>)
+              </div>
+              <!-- Segment 6 -->
+              <div class="code-segment" id="seg-6">
+                <span class="code-comment"># STEP 6: Augment LLM Prompt and Generate answer</span><br />
+                context = <span class="code-string">"\n\n"</span>.join(retrieved_chunks)<br />
+                prompt = <span class="code-string">f"Context: {context}\n\nQuestion: {question}"</span><br />
+                outputs = model.generate(tokenizer(prompt))
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Diagram Flow -->
+          <div class="col" style="flex: 0.85;">
+            <div class="pipeline-container">
+              <div class="pipeline-node active" id="node-1">
+                <div style="font-weight: 700; font-size: 0.75rem; color: #a78bfa;">Step 1</div>
+                <div style="font-size: 0.65rem; color: #fff;">PDF Extraction</div>
+              </div>
+              <div class="pipeline-arrow" id="arrow-1">↓</div>
+              <div class="pipeline-node" id="node-2">
+                <div style="font-weight: 700; font-size: 0.75rem; color: #a78bfa;">Step 2</div>
+                <div style="font-size: 0.65rem; color: #fff;">Sliding-Window Chunking</div>
+              </div>
+              <div class="pipeline-arrow" id="arrow-2">↓</div>
+              <div class="pipeline-node" id="node-3">
+                <div style="font-weight: 700; font-size: 0.75rem; color: #a78bfa;">Step 3</div>
+                <div style="font-size: 0.65rem; color: #fff;">Embedding Generation</div>
+              </div>
+              <div class="pipeline-arrow" id="arrow-3">↓</div>
+              <div class="pipeline-node" id="node-4">
+                <div style="font-weight: 700; font-size: 0.75rem; color: #a78bfa;">Step 4</div>
+                <div style="font-size: 0.65rem; color: #fff;">In-Memory FAISS Storage</div>
+              </div>
+              <div class="pipeline-arrow" id="arrow-4">↓</div>
+              <div class="pipeline-node" id="node-5">
+                <div style="font-weight: 700; font-size: 0.75rem; color: #a78bfa;">Step 5</div>
+                <div style="font-size: 0.65rem; color: #fff;">Top-K Cosine Retrieval</div>
+              </div>
+              <div class="pipeline-arrow" id="arrow-5">↓</div>
+              <div class="pipeline-node" id="node-6">
+                <div style="font-weight: 700; font-size: 0.75rem; color: #a78bfa;">Step 6</div>
+                <div style="font-size: 0.65rem; color: #fff;">Grounded Prompt LLM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Decision Matrix -->
+      <section data-transition="slide-in fade-out">
+        <div class="badge badge-warning">Decision Architecture</div>
+        <h2>When to Deploy RAG?</h2>
+        <div class="slide-cols" style="font-size: 0.8em; margin-top: 1rem;">
+          <div class="col glass-panel" style="border-top: 4px solid var(--rag-accent);">
+            <h3 style="color:#a78bfa; font-size:1.15rem; margin-bottom:0.5rem;">✅ Ideal Use Cases</h3>
+            <ul class="check-list">
+              <li>Massive volumes of text documents (e.g. employee guidelines, policy manuals).</li>
+              <li>Data is updated frequently (avoids constant retraining).</li>
+              <li>You require absolute auditability and direct citations.</li>
+              <li>Hallucinations cannot be tolerated (e.g. financial or legal queries).</li>
+            </ul>
+          </div>
+
+          <div class="col glass-panel" style="border-top: 4px dashed rgba(239, 68, 68, 0.45);">
+            <h3 style="color:var(--warn-accent); font-size:1.15rem; margin-bottom:0.5rem;">❌ When NOT to use</h3>
+            <ul class="cross-list">
+              <li>Small static context (e.g. a simple 10-line instructions sheet, system prompt is enough).</li>
+              <li>When millisecond real-time low latency is paramount (Retrieval steps add ~100-300ms overhead).</li>
+              <li>Highly structured database queries (SQL is much better than vector similarity).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9: Real-world Landscape -->
+      <section data-transition="zoom">
+        <div class="badge badge-rag">Applications</div>
+        <h2>RAG in Enterprise Industry</h2>
+        <div class="slide-cols" style="font-size: 0.82rem; margin-top: 0.5rem;">
+          <div class="col glass-panel">
+            <h4 style="color:var(--rag-accent); margin-bottom: 0.4rem; font-size: 0.95rem;">📂 Customer Support Wikis</h4>
+            <p style="margin: 0; line-height: 1.45;">
+              Stitching tech manuals directly into support chat widgets to allow support representatives or customers to retrieve exact answers to troubleshooting guides instantly.
+            </p>
+          </div>
+          <div class="col glass-panel">
+            <h4 style="color:var(--rag-accent); margin-bottom: 0.4rem; font-size: 0.95rem;">⚖️ Legal Discovery Tools</h4>
+            <p style="margin: 0; line-height: 1.45;">
+              Parsing thousands of past cases or court rulings, retrieving semantic arguments, and generating cohesive briefs with exact legal paragraph citations.
+            </p>
+          </div>
+          <div class="col glass-panel">
+            <h4 style="color:var(--rag-accent); margin-bottom: 0.4rem; font-size: 0.95rem;">🩺 Medical Research Bots</h4>
+            <p style="margin: 0; line-height: 1.45;">
+              Querying extensive medical libraries (such as PubMed) during clinical research to compile treatment guidelines and verify drug interaction facts.
+            </p>
+          </div>
+        </div>
+        <div class="glass-panel glass-panel-rag" style="padding: 0.85rem 1.25rem; font-size: 0.78em; margin-top: 1rem; text-align: center; font-weight: 500;">
+          💡 <strong>Pro Tip:</strong> Hybrids combining keyword matching (BM25) and dense embeddings (bi-encoders) provide maximum coverage.
+        </div>
+      </section>
+
+      <!-- Slide 10: Outro -->
+      <section data-transition="zoom" style="text-align: center;">
+        <h1 style="font-size: 3.5rem; text-align: center;">Grounding the Brain</h1>
+        <h3 style="text-align: center; color: var(--text-muted); font-size: 1.5rem; margin-top: 1rem;">You've mastered Retrieval-Augmented Generation.</h3>
+        <p style="font-size: 1rem; margin-top: 2rem; color: #a78bfa;">Let's build factual, trustworthy AI. Proceed to active labs.</p>
+        <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 2rem;">
+          <a href="index.html" class="portal-btn portal-btn-rag" style="font-size: 0.95rem; padding: 0.6rem 1.5rem;">Return to Portal</a>
+          <a href="agent.html" class="portal-btn portal-btn-agent" style="font-size: 0.95rem; padding: 0.6rem 1.5rem;">Explore Agentic AI</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      transition: "slide",
+      fragments: true,
+      controlsTutorial: true,
+      progress: true,
+      plugins: [RevealNotes, RevealHighlight],
+    });
+
+    // Custom Interactive Code Execution Flow Visualizer Script
+    function updateCodeFlow(activeIndex) {
+      // activeIndex matches step 1 to 6
+      for (let i = 1; i <= 6; i++) {
+        const seg = document.getElementById(`seg-${i}`);
+        const node = document.getElementById(`node-${i}`);
+        const arrow = document.getElementById(`arrow-${i - 1}`); // arrow-1 is between node-1 & node-2
+
+        if (seg) {
+          seg.classList.remove('active');
+          if (i === activeIndex) {
+            seg.classList.add('active');
+            
+            // Smoothly scroll container to center the active code segment
+            const editorCode = document.querySelector('.editor-code');
+            if (editorCode) {
+              const topPos = seg.offsetTop - editorCode.offsetTop - (editorCode.clientHeight / 2) + (seg.clientHeight / 2);
+              editorCode.scrollTo({ top: topPos, behavior: 'smooth' });
+            }
+          }
+        }
+
+        if (node) {
+          node.classList.remove('active', 'completed');
+          if (i === activeIndex) {
+            node.classList.add('active');
+          } else if (i < activeIndex) {
+            node.classList.add('completed');
+          }
+        }
+
+        if (arrow) {
+          arrow.classList.remove('completed');
+          if (i <= activeIndex) {
+            arrow.classList.add('completed');
+          }
+        }
+      }
+    }
+
+    function syncSlideState(slide) {
+      if (!slide) return;
+      if (slide.classList.contains('code-flow-slide')) {
+        const activeFragments = slide.querySelectorAll('.fragment.visible');
+        const activeIndex = activeFragments.length + 1; // 1 to 6
+        updateCodeFlow(activeIndex);
+      }
+    }
+
+    Reveal.on('ready', event => {
+      syncSlideState(Reveal.getCurrentSlide());
+    });
+
+    Reveal.on('slidechanged', event => {
+      syncSlideState(event.currentSlide);
+    });
+
+    Reveal.on('fragmentshown', event => {
+      syncSlideState(Reveal.getCurrentSlide());
+    });
+
+    Reveal.on('fragmenthidden', event => {
+      syncSlideState(Reveal.getCurrentSlide());
+    });
+  </script>
+</body>
+
+</html>
