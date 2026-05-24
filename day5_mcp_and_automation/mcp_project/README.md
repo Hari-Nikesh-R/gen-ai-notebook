@@ -57,14 +57,16 @@ MCP is the same idea for AI:
 mcp_project/
 │
 ├── mcp_tool.py        ← THE SERVER  (your tools live here)
-│                        Exposes: list_available_notes, read_note_content
+│                        Notes tools  : list_available_notes, read_note_content
+│                        To-do tools  : add_todo, list_todos, complete_todo, delete_todo
 │
 ├── ollama_client.py   ← THE CLIENT  (the chatbot lives here)
 │                        Starts the server, talks to the LLM, runs tools
 │
-└── my_notes/          ← Your text files (the AI can read these)
+└── my_notes/          ← Your files (notes + to-do list)
     ├── app_idea.txt
     ├── meeting_notes.txt
+    ├── todo.json       ← auto-created when you add your first task
     └── ...
 ```
 
@@ -106,6 +108,29 @@ The server and client run as **two separate Python processes**. The client start
 ```
 
 The key insight: **the LLM never runs your Python code**. It only *asks* for tools to be called. The client (your Python code) does the actual running and feeds the result back.
+
+---
+
+## All Available Tools
+
+| Tool | Group | What it does |
+| :--- | :--- | :--- |
+| `list_available_notes` | Notes | Lists all `.txt` files in `my_notes/` |
+| `read_note_content(filename)` | Notes | Reads and returns the full text of a note |
+| `add_todo(task)` | To-Do | Creates a new task, saves it with ID + timestamp |
+| `list_todos(filter)` | To-Do | Shows tasks — `"all"`, `"pending"`, or `"done"` |
+| `complete_todo(task_id)` | To-Do | Marks a task done, records exact date & time |
+| `delete_todo(task_id)` | To-Do | Permanently removes a task by ID |
+
+The AI will call these **automatically** based on what you say:
+
+| You say | AI does |
+| :--- | :--- |
+| *"I need to fix the login bug"* | calls `add_todo("Fix the login bug")` |
+| *"I finished the design review"* | calls `complete_todo(matching_id)` |
+| *"What do I still need to do?"* | calls `list_todos("pending")` |
+| *"Remove task 3"* | calls `delete_todo(3)` |
+| *"What was my app idea?"* | calls `list_available_notes`, then `read_note_content` |
 
 ---
 
@@ -186,6 +211,39 @@ def read_note_content(filename: str) -> str:
 ```
 
 This is true in production too. GitHub's MCP server, Slack's MCP server — they all succeed or fail based on the quality of their tool descriptions.
+
+### The To-Do Manager tools
+
+The to-do list is stored as a JSON file at `my_notes/todo.json`. Each task looks like this:
+
+```json
+{
+  "id": 1,
+  "task": "Fix the login bug",
+  "status": "pending",
+  "created_at": "2026-05-25 01:00:00",
+  "completed_at": null
+}
+```
+
+When you call `complete_todo(1)`, the status flips to `"done"` and `completed_at` gets the real timestamp:
+
+```json
+{
+  "id": 1,
+  "task": "Fix the login bug",
+  "status": "done",
+  "created_at": "2026-05-25 01:00:00",
+  "completed_at": "2026-05-25 14:32:07"
+}
+```
+
+The file is updated on every `add_todo`, `complete_todo`, and `delete_todo` call, so your task list survives restarts.
+
+**Why JSON and not a .txt file?**
+Because JSON gives us structure — each task has an ID, status, and two timestamps. A plain text file would make it hard to find and update a specific task.
+
+---
 
 ### Transport: how the server communicates
 
@@ -379,26 +437,44 @@ python ollama_client.py
 
 ```text
 Starting MCP server...
-Tools: ['list_available_notes', 'read_note_content']
+Tools: ['list_available_notes', 'read_note_content', 'add_todo',
+        'list_todos', 'complete_todo', 'delete_todo']
 Type 'exit' to quit, 'clear' to reset history.
 
-You: what notes do I have?
+You: I need to benchmark Qdrant vs FAISS this week
 
-AI: You have 10 notes: app_idea, meeting_notes, reading_list,
-project_ideas, reminders, learning_goals, travel_japan, bug_log,
-recipe_rasam, cheatsheet.
+AI: Got it! I've added that to your to-do list.
+    ⬜ [1] Benchmark Qdrant vs FAISS this week
+       Added : 2026-05-25 01:15:32
 
-You: what was the app idea?
+You: also remind me to write the migration RFC
 
-AI: Your app idea is "PocketProfessor" — a mobile app that lets students
-chat with any textbook PDF and works fully offline.
+AI: Added!
+    ⬜ [2] Write the migration RFC
+       Added : 2026-05-25 01:15:48
 
-You: what bugs are still open?
+You: what do I still need to do?
 
-AI: According to your bug log, you have 3 open issues:
-  1. RAG retrieval drops 12% recall on long queries
-  2. FAISS index rebuild takes 18 minutes
-  3. Memory leak in ollama_client.py during long sessions
+AI: ⬜ Pending Tasks
+
+    ⬜ [1] Benchmark Qdrant vs FAISS this week
+         Added : 2026-05-25 01:15:32
+
+    ⬜ [2] Write the migration RFC
+         Added : 2026-05-25 01:15:48
+
+You: I finished the benchmarking
+
+AI: Great work! Marking it done.
+    ✅ Task marked as done!
+       ID        : 1
+       Task      : Benchmark Qdrant vs FAISS this week
+       Completed : 2026-05-25 14:30:05
+
+You: what was the app idea in my notes?
+
+AI: Your app idea is "PocketProfessor" — a mobile app that lets
+students chat with any textbook PDF and works fully offline.
 
 You: exit
 Goodbye!
