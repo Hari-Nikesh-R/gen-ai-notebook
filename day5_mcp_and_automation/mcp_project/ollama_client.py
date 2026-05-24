@@ -1,95 +1,94 @@
+"""
+Ollama + MCP Client
+-------------------
+A minimal client that lets a local Ollama LLM use the tools exposed by
+our MCP server (mcp_tool.py).
+
+Flow:
+  1. Launch the MCP server as a child process over stdio.
+  2. Ask the server which tools it offers.
+  3. Send a user question to Ollama, along with the tool list.
+  4. If the LLM decides to call a tool, run it via MCP and feed
+     the result back into the conversation.
+  5. Print the final, grounded answer.
+"""
+
 import asyncio
 import sys
+
 import ollama
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# The model must match the one you pulled in the prerequisites
-MODEL_NAME = "llama3.2"
+MODEL = "llama3.2"
+SERVER_SCRIPT = "mcp_tool.py"
+QUESTION = "Check my notes and tell me what the app idea was."
 
-async def run_agent():
-    # 1. Define how to start our background MCP server
+
+def to_ollama_tools(mcp_tools):
+    """Convert MCP tool definitions into the schema Ollama expects."""
+    return [
+        {
+            "type": "function",
+            "function": {
+                "name": tool.name,
+                "description": tool.description,
+                "parameters": tool.inputSchema,
+            },
+        }
+        for tool in mcp_tools
+    ]
+
+
+async def main():
     server_params = StdioServerParameters(
-        command=sys.executable, # Uses your current Python environment
-        args=["reference_server.py"]
+        command=sys.executable,
+        args=[SERVER_SCRIPT],
     )
-    
-    print("[*] Starting local MCP Server...")
-    
-    # 2. Open the stdio connection and initialize the session
+
+    print("[1/4] Starting MCP server...")
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
-            
-            # 3. Fetch the tools from the server and translate them for Ollama
-            mcp_tools = await session.list_tools()
-            ollama_tools = []
-            
-            for tool in mcp_tools.tools:
-                ollama_tools.append({
-                    "type": "function",
-                    "function": {
-                        "name": tool.name,
-                        "description": tool.description,
-                        "parameters": tool.inputSchema
-                    }
-                })
-            print(f"[✓] Server connected. Discovered tools: {[t.name for t in mcp_tools.tools]}")
-            
-            # 4. Set up the conversation
-            messages = [{
-                "role": "user", 
-                "content": "Check my notes and tell me what the app idea was."
-            }]
-            
-            print(f"\n[Prompt]: {messages[0]['content']}\n")
-            print("[*] Thinking...")
-            
-            # 5. First Pass: Give Ollama the prompt and the tool menu
-            response = ollama.chat(
-                model=MODEL_NAME,
+
+            tools = (await session.list_tools()).tools
+            print(f"[2/4] Tools available: {[t.name for t in tools]}")
+
+            messages = [{"role": "user", "content": QUESTION}]
+            print(f"\n[User]  {QUESTION}\n")
+
+            print("[3/4] Asking the LLM...")
+            reply = ollama.chat(
+                model=MODEL,
                 messages=messages,
-                tools=ollama_tools
-            )
-            
-            assistant_msg = response["message"]
-            messages.append(assistant_msg)
-            
-            # 6. Check if Ollama decided it needs to use a tool
-            if "tool_calls" in assistant_msg and assistant_msg["tool_calls"]:
-                
-                # Execute every tool the model requested
-                for tool_call in assistant_msg["tool_calls"]:
-                    tool_name = tool_call["function"]["name"]
-                    tool_args = tool_call["function"]["arguments"]
-                    
-                    print(f"[!] Executing Tool: {tool_name}({tool_args})")
-                    
-                    # 7. Route the request down to the MCP server and wait for the result
-                    mcp_result = await session.call_tool(tool_name, arguments=tool_args)
-                    result_text = mcp_result.content[0].text
-                    
-                    # 8. Append the raw data back into the chat history as a "tool" role
-                    messages.append({
-                        "role": "tool",
-                        "content": result_text
-                    })
-                
-                # 9. Second Pass: Send the history (now containing the file data) back to Ollama
-                print("[*] Passing data back to Ollama for final answer...\n")
-                final_response = ollama.chat(
-                    model=MODEL_NAME,
-                    messages=messages
-                )
-                print(f"🤖 Final Answer: {final_response['message']['content']}")
-            
+                tools=to_ollama_tools(tools),
+            )["message"]
+            messages.append(reply)
+
+            tool_calls = reply.get("tool_calls") or []
+
+            for call in tool_calls:
+                name = call["function"]["name"]
+                args = call["function"]["arguments"]
+                print(f"   -> Tool call: {name}({args})")
+
+                result = await session.call_tool(name, arguments=args)
+                messages.append({
+                    "role": "tool",
+                    "content": result.content[0].text,
+                })
+
+            if tool_calls:
+                print("[4/4] Generating final answer with tool results...\n")
+                final = ollama.chat(model=MODEL, messages=messages)
+                answer = final["message"]["content"]
             else:
-                # If the model didn't need tools, just print its response
-                print(f"🤖 Answer: {assistant_msg['content']}")
+                answer = reply["content"]
+
+            print(f"[AI]    {answer}")
+
 
 if __name__ == "__main__":
-    # Suppress macOS/Windows asyncio warnings for clean output
     if sys.platform.startswith("win"):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        
-    asyncio.run(run_agent())
+    asyncio.run(main())

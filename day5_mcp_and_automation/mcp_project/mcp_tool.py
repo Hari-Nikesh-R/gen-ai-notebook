@@ -5,6 +5,9 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("SmartReferenceDesk")
 NOTES_FOLDER = "./my_notes"
 
+# Make sure the notes folder exists so first-run never crashes
+os.makedirs(NOTES_FOLDER, exist_ok=True)
+
 # 2. Tool to list available files
 @mcp.tool()
 def list_available_notes() -> str:
@@ -23,7 +26,7 @@ def read_note_content(filename: str) -> str:
     """Reads and returns the exact text content of a specified note file."""
     if not filename.endswith(".txt"):
         return "Error: Can only read .txt files."
-        
+
     filepath = os.path.join(NOTES_FOLDER, filename)
     try:
         with open(filepath, 'r') as file:
