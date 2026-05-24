@@ -1,0 +1,35 @@
+Project Ideas — 2026
+
+1. PocketProfessor (mobile)
+   Chat with any textbook PDF, offline-capable.
+   Status: prototype — see app_idea.txt
+
+2. CommitWhisperer (CLI)
+   A local tool that reads `git diff` and writes a conventional-commit
+   message using a small local LLM.
+   Stack: Rust + Ollama + tree-sitter.
+   Estimated effort: 2 weekends.
+
+3. NoteGraph (web)
+   Drop a folder of notes, get an interactive knowledge graph.
+   Edges are computed from embedding similarity.
+   Stack: Next.js + FastAPI + Qdrant + D3.
+
+4. TinyAgent (educational)
+   A 200-line MCP-based agent framework, written for teaching.
+   Goal: a CS student should fully understand it in one evening.
+
+5. PaperRadar (browser extension)
+   When you open a research paper on arXiv, show the 5 most-related
+   papers using local embeddings — no cloud calls.
+
+Decision Criteria
+-----------------
+- Will I learn something new?  (must be yes)
+- Can a v1 ship in <= 2 weeks?
+- Does it solve a problem I personally have?
+- Is there an obvious moat or am I just rebuilding?
+
+Top Pick This Quarter
+---------------------
+CommitWhisperer — small, shippable, useful daily.

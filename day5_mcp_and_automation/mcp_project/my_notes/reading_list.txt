@@ -1,0 +1,30 @@
+Reading List — AI & Systems
+
+Currently Reading
+-----------------
+- "Designing Data-Intensive Applications" by Martin Kleppmann
+  Chapter 5 (Replication). 60% done.
+
+Up Next
+-------
+1. "The Worlds I See" — Fei-Fei Li
+2. "Build a Large Language Model from Scratch" — Sebastian Raschka
+3. "Crafting Interpreters" — Robert Nystrom
+
+Papers To Read
+--------------
+- "Attention Is All You Need" (Vaswani et al., 2017) — re-read
+- "RAG: Retrieval-Augmented Generation" (Lewis et al., 2020)
+- "Toolformer: Language Models Can Teach Themselves to Use Tools"
+- "MCP Specification" — modelcontextprotocol.io
+- "Constitutional AI" — Anthropic
+
+Finished This Year
+------------------
+- "The Pragmatic Programmer" — 9/10
+- "Staff Engineer" by Will Larson — 8/10
+- "Tidy First?" by Kent Beck — 7/10
+
+Notes
+-----
+Dedicate 30 min every morning before standup. No phone, only book.

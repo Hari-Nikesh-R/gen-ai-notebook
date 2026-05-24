@@ -1,0 +1,30 @@
+Meeting Notes — Product Sync (May 22, 2026)
+
+Attendees: Hari, Priya, Daniel, Anya
+Duration: 45 min
+
+Agenda
+------
+1. Q3 roadmap finalization
+2. RAG accuracy regression
+3. Onboarding redesign
+
+Key Decisions
+-------------
+- Ship the new chunking strategy behind a feature flag by June 5.
+- Move from FAISS to Qdrant for the production index (better filtering).
+- Onboarding will be reduced from 7 steps to 3.
+
+Action Items
+------------
+- Hari: benchmark Qdrant vs FAISS on the 100k-doc corpus. Due May 28.
+- Priya: write the migration RFC. Due May 30.
+- Daniel: ship onboarding v2 prototype. Due June 3.
+- Anya: customer interviews (5 enterprise users). Due June 1.
+
+Open Questions
+--------------
+- Do we keep FAISS as a fallback for offline mode?
+- Who owns the embedding model upgrade (BGE-large vs E5)?
+
+Next sync: May 29, 10:30 AM IST.
