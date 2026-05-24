@@ -1,94 +1,92 @@
 """
-Ollama + MCP Client
--------------------
-A minimal client that lets a local Ollama LLM use the tools exposed by
-our MCP server (mcp_tool.py).
+Ollama + MCP Chatbot (LangChain edition)
+----------------------------------------
+A tiny chat loop that lets a local Ollama LLM use the tools exposed by
+mcp_tool.py. LangChain handles tool conversion, multi-step reasoning,
+and conversation memory — so the client stays small.
 
-Flow:
-  1. Launch the MCP server as a child process over stdio.
-  2. Ask the server which tools it offers.
-  3. Send a user question to Ollama, along with the tool list.
-  4. If the LLM decides to call a tool, run it via MCP and feed
-     the result back into the conversation.
-  5. Print the final, grounded answer.
+Type a question and hit Enter. Conversation history is preserved.
+
+Commands:
+  exit / quit / :q    leave the chatbot
+  clear               wipe conversation history
+  Ctrl+C              quit immediately
 """
 
 import asyncio
 import sys
 
-import ollama
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_mcp_adapters.tools import load_mcp_tools
+from langchain_ollama import ChatOllama
+from langgraph.prebuilt import create_react_agent
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 MODEL = "llama3.2"
 SERVER_SCRIPT = "mcp_tool.py"
-QUESTION = "Check my notes and tell me what the app idea was."
+SYSTEM_PROMPT = (
+    "You are a helpful assistant with access to the user's personal notes "
+    "via MCP tools. Use list_available_notes to see what files exist, then "
+    "read_note_content to read any you need. Answer concisely."
+)
 
 
-def to_ollama_tools(mcp_tools):
-    """Convert MCP tool definitions into the schema Ollama expects."""
-    return [
-        {
-            "type": "function",
-            "function": {
-                "name": tool.name,
-                "description": tool.description,
-                "parameters": tool.inputSchema,
-            },
-        }
-        for tool in mcp_tools
-    ]
-
-
-async def main():
+async def chat_loop():
     server_params = StdioServerParameters(
-        command=sys.executable,
-        args=[SERVER_SCRIPT],
+        command=sys.executable, args=[SERVER_SCRIPT]
     )
 
-    print("[1/4] Starting MCP server...")
+    print("Starting MCP server...")
     async with stdio_client(server_params) as (read, write):
         async with ClientSession(read, write) as session:
             await session.initialize()
 
-            tools = (await session.list_tools()).tools
-            print(f"[2/4] Tools available: {[t.name for t in tools]}")
+            tools = await load_mcp_tools(session)
+            llm = ChatOllama(model=MODEL)
+            agent = create_react_agent(llm, tools)
 
-            messages = [{"role": "user", "content": QUESTION}]
-            print(f"\n[User]  {QUESTION}\n")
+            print(f"Tools: {[t.name for t in tools]}")
+            print("Type 'exit' to quit, 'clear' to reset history.\n")
 
-            print("[3/4] Asking the LLM...")
-            reply = ollama.chat(
-                model=MODEL,
-                messages=messages,
-                tools=to_ollama_tools(tools),
-            )["message"]
-            messages.append(reply)
+            history = [SystemMessage(content=SYSTEM_PROMPT)]
 
-            tool_calls = reply.get("tool_calls") or []
+            while True:
+                try:
+                    user = input("You: ").strip()
+                except (EOFError, KeyboardInterrupt):
+                    print("\nGoodbye!")
+                    return
 
-            for call in tool_calls:
-                name = call["function"]["name"]
-                args = call["function"]["arguments"]
-                print(f"   -> Tool call: {name}({args})")
+                if not user:
+                    continue
 
-                result = await session.call_tool(name, arguments=args)
-                messages.append({
-                    "role": "tool",
-                    "content": result.content[0].text,
-                })
+                cmd = user.lower()
+                if cmd in {"exit", "quit", ":q"}:
+                    print("Goodbye!")
+                    return
+                if cmd == "clear":
+                    history = [SystemMessage(content=SYSTEM_PROMPT)]
+                    print("(history cleared)\n")
+                    continue
 
-            if tool_calls:
-                print("[4/4] Generating final answer with tool results...\n")
-                final = ollama.chat(model=MODEL, messages=messages)
-                answer = final["message"]["content"]
-            else:
-                answer = reply["content"]
+                history.append(HumanMessage(content=user))
+                try:
+                    result = await agent.ainvoke({"messages": history})
+                except KeyboardInterrupt:
+                    print("\n(interrupted)")
+                    history.pop()
+                    continue
 
-            print(f"[AI]    {answer}")
+                history = result["messages"]
+                print(f"\nAI: {history[-1].content}\n")
 
 
 if __name__ == "__main__":
     if sys.platform.startswith("win"):
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    asyncio.run(main())
+
+    try:
+        asyncio.run(chat_loop())
+    except KeyboardInterrupt:
+        print("\nGoodbye!")

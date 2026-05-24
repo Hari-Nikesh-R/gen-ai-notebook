@@ -173,24 +173,34 @@ The MCP server reads JSON-RPC messages from **stdin** and writes responses to **
 
 ---
 
-## STEP 4 — The Client
+## STEP 4 — The Client (LangChain Edition)
 
 ### Code
 ```python
 server_params = StdioServerParameters(
-    command=sys.executable,
-    args=["mcp_tool.py"],
+    command=sys.executable, args=["mcp_tool.py"],
 )
 
 async with stdio_client(server_params) as (read, write):
     async with ClientSession(read, write) as session:
         await session.initialize()
+        tools = await load_mcp_tools(session)
+        agent = create_react_agent(ChatOllama(model="llama3.2"), tools)
 ```
 
 ### What happens internally?
 1. The client **spawns** `python mcp_tool.py` as a subprocess.
 2. It opens two pipes: `read` (server stdout) and `write` (server stdin).
 3. `session.initialize()` does the MCP **handshake** — version negotiation, capability exchange.
+4. `load_mcp_tools(session)` calls `list_tools()` under the hood and wraps each one as a LangChain `Tool` (handles JSON-Schema → LangChain conversion for you).
+5. `create_react_agent(llm, tools)` wires up a LangGraph state machine that loops *LLM → tool calls → LLM* until a final answer is produced.
+
+### Why one session, many questions
+The client keeps **one** session open for the whole chat. Spawning the
+server once and reusing it means:
+*   Tool discovery happens only at startup — instant follow-ups.
+*   Conversation history is preserved → real multi-turn dialogue.
+*   Tool calls in turn 5 are as fast as in turn 1.
 
 ### Visualization
 ```text
@@ -201,114 +211,110 @@ ollama_client.py
        │
        ▼
   FastMCP listening on stdio
+       ▲
+       │ load_mcp_tools(session)
+       │
+   LangGraph agent (ChatOllama + MCP tools)
 ```
 
 ---
 
-## STEP 5 — Tool Discovery
+## STEP 5 — Tool Discovery (Auto)
 
-### Code
+### Without LangChain (manual — what we used to write)
 ```python
-tools = (await session.list_tools()).tools
+mcp_tools = (await session.list_tools()).tools
+ollama_tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": t.name,
+            "description": t.description,
+            "parameters": t.inputSchema,
+        },
+    }
+    for t in mcp_tools
+]
 ```
 
-### What Comes Back
-A list of tool objects, each containing:
-*   `name`
-*   `description`
-*   `inputSchema` (JSON Schema)
-
-### Translating for Ollama
-Different LLM SDKs expect slightly different shapes. We convert MCP → Ollama:
-
+### With LangChain (one line)
 ```python
-def to_ollama_tools(mcp_tools):
-    return [
-        {
-            "type": "function",
-            "function": {
-                "name": tool.name,
-                "description": tool.description,
-                "parameters": tool.inputSchema,
-            },
-        }
-        for tool in mcp_tools
-    ]
+tools = await load_mcp_tools(session)
 ```
 
-This **adapter pattern** is exactly how Cursor, Claude Desktop, and other clients reuse the same MCP server.
+`load_mcp_tools` reads the same `name / description / inputSchema` triple
+and returns a list of `BaseTool` objects that any LangChain agent can use.
+This is the **adapter pattern** — same job, less boilerplate.
+
+This is also the same pattern Cursor, Claude Desktop, and other MCP
+clients use internally to reuse one MCP server everywhere.
 
 ---
 
-## STEP 6 — LLM Tool Selection
+## STEP 6 — LLM Tool Selection (Done by `create_react_agent`)
 
-### Code
-```python
-reply = ollama.chat(
-    model=MODEL,
-    messages=messages,
-    tools=to_ollama_tools(tools),
-)["message"]
+When you call `agent.ainvoke({"messages": history})`, LangGraph runs the
+following loop on your behalf:
+
+```text
+   [LLM]
+     │ "Should I call a tool?"
+     ▼
+  tool_calls?  ── no ──►  return final answer
+     │ yes
+     ▼
+  [run tool] ── result ──► append to history ──► back to LLM
 ```
 
-### Internal Thinking
+Under the hood the LLM still emits a `tool_calls` JSON block — we just
+don't have to write the dispatch code.
 
-Ollama receives:
-*   The user's question
-*   A menu of available tools
-
-It returns one of two things:
-1. A **plain answer** (no tool needed), OR
-2. A **`tool_calls`** list saying *"please run `read_note_content(filename='app_idea.txt')` for me"*.
-
-### Example LLM Response
+### Example LLM Response (raw)
 ```json
 {
   "role": "assistant",
   "tool_calls": [
-    {
-      "function": {
-        "name": "list_available_notes",
-        "arguments": {}
-      }
-    }
+    { "function": { "name": "list_available_notes", "arguments": {} } }
   ]
 }
 ```
 
-The LLM is **NOT** running the function — it is just **proposing** which one to run.
+The LLM is **NOT** executing anything — it is **proposing** which tool to run.
+
+> **Day 4 connection.** Day 4 used `AgentType.ZERO_SHOT_REACT_DESCRIPTION`
+> which built ReAct on top of *prompt templates* (because the old
+> `Ollama` LLM didn't have native tool calling). `ChatOllama` + llama3.2
+> support **native tool calling**, so `create_react_agent` uses the
+> proper structured `tool_calls` field. Same idea, cleaner mechanics.
 
 ---
 
-## STEP 7 — Tool Execution
+## STEP 7 — Tool Execution (Auto)
 
-### Code
-```python
-for call in tool_calls:
-    name = call["function"]["name"]
-    args = call["function"]["arguments"]
+LangGraph dispatches each `tool_call` through the MCP session for us:
 
-    result = await session.call_tool(name, arguments=args)
-    messages.append({
-        "role": "tool",
-        "content": result.content[0].text,
-    })
+```text
+agent ──► load_mcp_tools wrapper ──► session.call_tool(name, args)
+                                          │
+                                          ▼
+                                      MCP server
+                                          │
+                                          ▼
+                                    Python function
 ```
 
-### What Happens Internally
-1. The client sends the tool name + args **down the stdio pipe** to the server.
-2. The server runs the actual Python function (e.g. opens the `.txt` file).
-3. The text result comes back over stdio.
-4. We add it to the chat history with `role: "tool"`.
+We never write `session.call_tool(...)` by hand. The result is appended
+to the conversation as a `ToolMessage` and fed back to the LLM.
 
 ### Real Internal Conversation
 ```text
-[user]      Check my notes and tell me what the app idea was.
+[user]      What was the app idea I wrote down?
 [assistant] tool_call: list_available_notes()
-[tool]      Available notes: app_idea.txt
+[tool]      Available notes: app_idea.txt, ...
 [assistant] tool_call: read_note_content(filename="app_idea.txt")
 [tool]      --- Content of app_idea.txt ---
             App Idea: PocketProfessor ...
+[assistant] Your note describes PocketProfessor ...
 ```
 
 ---
@@ -317,16 +323,13 @@ for call in tool_calls:
 
 ### Code
 ```python
-final = ollama.chat(model=MODEL, messages=messages)
-print(final["message"]["content"])
+result = await agent.ainvoke({"messages": history})
+print(result["messages"][-1].content)
 ```
 
-The LLM now has:
-*   The original question
-*   Its own reasoning steps
-*   The **real data** from the tool
-
-…and produces a grounded final answer.
+`result["messages"]` is the **entire** conversation including every tool
+call and tool result. The last message is always the final assistant
+answer, so we just print that.
 
 ### Sample Output
 > "Your note `app_idea.txt` describes **PocketProfessor**, a mobile app
@@ -335,6 +338,13 @@ The LLM now has:
 ### Why MCP Is Powerful
 *   **Without MCP:** the LLM hallucinates about your files.
 *   **With MCP:** the LLM reads the real file and tells you the truth.
+
+### Why LangChain Is Powerful Here
+*   No JSON-Schema translation code.
+*   No hand-rolled tool-call loop.
+*   Multi-turn tool chaining works for free — LangGraph keeps looping until the LLM stops asking for tools.
+*   Conversation memory is just a list of `messages` you keep around.
+*   Same agent runtime as your day 4 project — only the tools change.
 
 ---
 
@@ -351,8 +361,21 @@ The LLM now has:
 ### 1. Install the dependencies
 
 ```bash
-pip install mcp ollama
+pip install mcp langchain-ollama langchain-mcp-adapters langgraph
 ```
+
+| Package | Why |
+| :--- | :--- |
+| `mcp` | The protocol SDK (server + stdio transport) |
+| `langchain-ollama` | `ChatOllama` chat model with native tool-calling |
+| `langchain-mcp-adapters` | Auto-converts MCP tools → LangChain tools |
+| `langgraph` | `create_react_agent` runs the LLM ↔ tool loop for us |
+
+> **From day 4 → day 5.** In `day4_beyond_llm/agentic_ai/app.py` we used
+> `langchain_community.llms.Ollama` with `initialize_agent`. Here we
+> upgrade to `ChatOllama` (native tool calling) and `create_react_agent`
+> (the modern LangGraph successor to `initialize_agent`). The mental
+> model is identical — just less code and better tool routing.
 
 ### 2. Pull the LLM model
 
@@ -369,44 +392,80 @@ ollama list
 
 ```text
 mcp_project/
-├── mcp_tool.py        # The MCP server (tools)
-├── ollama_client.py   # The MCP client (LLM driver)
-├── my_notes/          # Auto-created on first run
-│   └── app_idea.txt   # Sample note for the demo
+├── mcp_tool.py        # The MCP server (tools — pure mcp SDK)
+├── ollama_client.py   # Chatbot client (LangChain + LangGraph + MCP)
+├── my_notes/          # Auto-created on first run; sample notes inside
+│   ├── app_idea.txt
+│   ├── meeting_notes.txt
+│   ├── project_ideas.txt
+│   └── ... (more sample notes)
 └── README.md
 ```
 
-### 4. Run the demo
+### 4. Run the chatbot
 
 ```bash
 cd day5_mcp_and_automation/mcp_project
 python ollama_client.py
 ```
 
+You'll drop into an interactive chat. Ask as many questions as you want;
+press **Ctrl+C** or type `exit` to quit.
+
 ### Expected Output
 ```text
-[1/4] Starting MCP server...
-[2/4] Tools available: ['list_available_notes', 'read_note_content']
+Starting MCP server...
+============================================================
+  Ollama + MCP Chatbot
+============================================================
+  Model:  llama3.2
+  Tools:  list_available_notes, read_note_content
+  Type 'help' for commands, 'exit' to quit (or Ctrl+C).
+============================================================
 
-[User]  Check my notes and tell me what the app idea was.
+You: what notes do I have?
+   [tool] list_available_notes({})
 
-[3/4] Asking the LLM...
-   -> Tool call: list_available_notes({})
-   -> Tool call: read_note_content({'filename': 'app_idea.txt'})
-[4/4] Generating final answer with tool results...
+AI: You have 10 notes: app_idea, meeting_notes, reading_list,
+project_ideas, reminders, learning_goals, travel_japan, bug_log,
+recipe_rasam, cheatsheet.
 
-[AI]    Your note describes "PocketProfessor", an app that lets students chat with any textbook PDF...
+You: summarize the app idea and the project I picked for this quarter
+   [tool] read_note_content({'filename': 'app_idea.txt'})
+   [tool] read_note_content({'filename': 'project_ideas.txt'})
+
+AI: Your app idea is "PocketProfessor" — a mobile app that lets
+students chat with any textbook PDF, fully offline. The project you
+picked for this quarter is "CommitWhisperer", a CLI that reads
+git diffs and writes conventional-commit messages using a local LLM.
+
+You: exit
+Goodbye!
 ```
+
+### Chatbot Commands
+
+| Command | Effect |
+| :--- | :--- |
+| `exit` / `quit` / `:q` | leave the chatbot |
+| `clear` | wipe conversation history (start fresh) |
+| `help` | show available commands |
+| `Ctrl+C` (at prompt) | quit immediately |
+| `Ctrl+C` (mid-answer) | cancel the current turn, keep chatting |
 
 ### 5. Try your own notes
 
-Drop any `.txt` file into `my_notes/` and re-run:
+Drop any `.txt` file into `my_notes/` and ask about it — no restart needed:
 ```bash
-echo "Remember: standup at 10am every day." > my_notes/reminders.txt
-python ollama_client.py
+echo "Remember: standup at 10am every day." > my_notes/standup.txt
 ```
 
-Edit the `QUESTION` constant at the top of `ollama_client.py` to ask anything you want.
+Then in the chatbot:
+```text
+You: when is standup?
+```
+
+The LLM will call `list_available_notes`, then `read_note_content('standup.txt')`, then answer.
 
 ---
 
@@ -511,11 +570,13 @@ If a client supports MCP, this triple is all you ever need.
 
 | Symptom | Likely cause | Fix |
 | :--- | :--- | :--- |
-| `ModuleNotFoundError: mcp` | SDK not installed | `pip install mcp` |
+| `ModuleNotFoundError: mcp` / `langchain_ollama` / `langgraph` | Deps not installed | `pip install mcp langchain-ollama langchain-mcp-adapters langgraph` |
 | `connection closed` instantly | Server crashed on startup | Run `python mcp_tool.py` directly to see the error |
 | Tools list is empty | Wrong path in config | Use an **absolute** path to `mcp_tool.py` |
-| LLM never calls a tool | Question is too vague | Be explicit: *"Use my notes to answer..."* |
+| LLM never calls a tool | Model lacks tool-calling support | Use `llama3.2`, `qwen2.5`, or `mistral-nemo` — not every model supports tools |
+| LLM never calls a tool (right model) | Question is too vague | Be explicit: *"Use my notes to answer..."* |
 | Ollama connection refused | Ollama daemon not running | Start the Ollama app or `ollama serve` |
+| `pydantic` version conflict | Old LangChain pinned | `pip install -U langchain-core langgraph` |
 
 ---
 
@@ -529,6 +590,8 @@ If a client supports MCP, this triple is all you ever need.
 
 3. **"What's the difference between MCP and OpenAI function calling?"**
    Function calling is a **per-LLM feature**. MCP is a **standard** that wraps function calling so any LLM can use any tool.
+
+   Concretely: in this project, `ChatOllama` uses Ollama's tool-calling. `langchain-mcp-adapters` is the bridge that says *"here's an MCP tool, expose it as a LangChain tool that fits any tool-calling LLM."*
 
 4. **"Do I need a database for MCP?"**
    No. Tools can do *anything* Python can do — read files, hit APIs, run shell commands, query DBs.
@@ -578,9 +641,32 @@ If a client supports MCP, this triple is all you ever need.
 
 ## What You Just Built
 
-A complete agent stack in **~70 lines of Python**:
-*   A **server** that exposes Python functions as tools.
-*   A **client** that lets a local LLM discover and call those tools.
+A complete agent stack in **~80 lines of Python**:
+*   A **server** that exposes Python functions as tools (`mcp_tool.py`, ~30 lines).
+*   A **LangChain-powered chatbot client** (`ollama_client.py`, ~70 lines) that:
+    *   Discovers MCP tools via `load_mcp_tools(session)` (one line).
+    *   Runs the LLM ↔ tool ↔ LLM loop via `create_react_agent` (one line).
+    *   Keeps a single MCP session alive across many questions.
+    *   Chains multiple tool calls per turn for free.
+    *   Supports `exit`, `clear`, and graceful Ctrl+C.
 *   A **transport** that works locally and plugs into Cursor, Antigravity, and Claude Desktop unchanged.
 
-This is the same pattern that powers Cursor's tool-using agent, Claude's filesystem access, and every modern AI IDE — just smaller.
+### Stack at a glance
+
+```text
+   ChatOllama (llama3.2, native tool calling)
+            │
+            ▼
+   create_react_agent  ← LangGraph
+            │
+            ▼
+   load_mcp_tools(session)  ← langchain-mcp-adapters
+            │
+            ▼
+       MCP session  ← mcp SDK (stdio)
+            │
+            ▼
+       mcp_tool.py
+```
+
+This is the same pattern that powers Cursor's tool-using agent, Claude's filesystem access, and every modern AI IDE — just smaller. And it is the natural progression from the LangChain-on-Ollama agent you built in **day 4**.
