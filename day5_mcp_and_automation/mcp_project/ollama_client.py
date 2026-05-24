@@ -23,7 +23,7 @@ from langgraph.prebuilt import create_react_agent
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-MODEL = "llama3.2"
+MODEL = "gemma4"
 SERVER_SCRIPT = "mcp_tool.py"
 SYSTEM_PROMPT = (
     "You are a helpful assistant with access to the user's personal notes "
