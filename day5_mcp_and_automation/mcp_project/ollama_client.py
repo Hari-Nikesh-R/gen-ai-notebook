@@ -1,16 +1,22 @@
 """
-Ollama + MCP Chatbot (LangChain edition)
-----------------------------------------
-A tiny chat loop that lets a local Ollama LLM use the tools exposed by
-mcp_tool.py. LangChain handles tool conversion, multi-step reasoning,
-and conversation memory — so the client stays small.
+Ollama + MCP Interactive Chatbot
+=================================
+This is the "client" side of the project.
 
-Type a question and hit Enter. Conversation history is preserved.
+It does three things:
+  1. Starts the MCP server (mcp_tool.py) as a background process.
+  2. Asks the LLM your questions, along with a list of available tools.
+  3. If the LLM wants to use a tool, runs it and feeds the result back.
 
-Commands:
-  exit / quit / :q    leave the chatbot
-  clear               wipe conversation history
-  Ctrl+C              quit immediately
+The conversation keeps going until you type 'exit' or press Ctrl+C.
+
+HOW TO RUN:
+  python ollama_client.py
+
+COMMANDS INSIDE THE CHAT:
+  exit / quit / :q   →  leave
+  clear              →  wipe conversation history (start fresh)
+  Ctrl+C             →  quit immediately
 """
 
 import asyncio
