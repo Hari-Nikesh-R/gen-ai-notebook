@@ -26,8 +26,13 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("SmartReferenceDesk")
 
-NOTES_FOLDER = "./my_notes"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Creates my_notes beside mcp_tool.py
+NOTES_FOLDER = os.path.join(BASE_DIR, "my_notes")
+
 TODO_FILE = os.path.join(NOTES_FOLDER, "todo.json")
+
 
 os.makedirs(NOTES_FOLDER, exist_ok=True)
 
