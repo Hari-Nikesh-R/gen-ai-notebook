@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question Paper</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            line-height: 1.8;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>AI Generated Question Paper</h1>
+
+    <pre>
+***(Disclaimer: This is a simulated university examination paper for educational purposes.)***
+
+# UNIVERSITY EXAMINATION PAPER
+
+**Subject:** Java Programming (Advanced Concepts)
+**Topic:** Java Streams API
+**Difficulty:** Hard
+**Maximum Marks:** 100
+**Time Allowed:** 3 Hours
+
+---
+
+## Instructions:
+1. Attempt all questions.
+2. Marks are indicated against each section and question.
+3. Assume standard Java 8+ development environment.
+
+***
+
+# SECTION A - Multiple Choice Questions (MCQs)
+**(5 Questions $\times$ 4 Marks = 20 Marks)**
+
+**Q1.** Given a list of strings, `List<String> words`, which of the following stream operations is the most robust way to filter out nulls and empty strings simultaneously, and then convert the remaining non-empty strings to uppercase?
+
+A) `words.stream().filter(s -> s != null && !s.isEmpty()).map(String::toUpperCase).collect(Collectors.toList());`
+B) `words.stream().map(s -> s == null ? null : s.toUpperCase()).filter(s -> s != null).collect(Collectors.toList());`
+C) `words.stream().filter(s -> s != null && !s.isEmpty()).collect(Collectors.toCollection(() -> new ArrayList<>()))`
+D) `words.stream().filter(Objects::nonNull).map(s -> s.toUpperCase()).filter(s -> !s.isEmpty()).collect(Collectors.toList());`
+
+**Q2.** Consider the operation: `list.stream().collect(Collectors.teeing(Collectors.counting(), Collectors.mapping(Person::getAge, Collectors.averagingInt()), (count, avg) -> count * avg));`
+What does the resulting value represent?
+
+A) The total number of people multiplied by their average age.
+B) The average age multiplied by the count of people.
+C) A unique identifier combining the count and the average age.
+D) This operation is syntactically invalid in standard Java Streams.
+
+**Q3.** In the context of Java Streams, what is the primary performance bottleneck or source of inefficiency when repeatedly performing intermediate terminal operations within a method body?
+
+A) Creating excessive overhead due to the `Iterable` structure.
+B) The overhead of boxing primitives (like `int` to `Integer`).
+C) Failure to realize that terminal operations must consume the stream.
+D) Unnecessary creation of new internal iterator objects for each operation.
+
+**Q4.** If you are dealing with a potentially huge dataset that does not fit into memory, which of the following approaches is the most idiomatic and memory-efficient way to process it using stream concepts?
+
+A) Read all data into an `ArrayList` first, then stream it.
+B) Use a custom `StreamSource` implementation that processes data lazily from a database cursor.
+C) Process the data using a standard Java Stream but limit the batch size (e.g., batching every 1000 records).
+D) Utilize Java's `SequenceStream` (if available) to read records one by one without collecting them.
+
+**Q5.** Which statement accurately describes the difference between `map` and `flatMap` when transforming a stream of complex objects (e.g., a stream of `List<String>`)?
+
+A) `map` is used only for primitive types, while `flatMap` is for reference types.
+B) `flatMap` flattens the resulting stream of collections into a single, single-type stream.
+C) `map` throws an exception if the transformation results in null, while `flatMap` handles it gracefully.
+D) There is no functional difference; `flatMap` is merely a specialized `map`.
+
+***
+
+# SECTION B - Theory Questions
+**(5 Questions $\times$ 10 Marks = 50 Marks)**
+
+**Q1. Analyzing Stream Side Effects (10 Marks)**
+Explain the concept of "side effects" within the context of Java Streams.
+a) Why are side effects generally discouraged in functional stream processing? (5 Marks)
+b) Provide a concrete example of using `forEach` that results in an undesirable side effect, and propose a safer, purely functional alternative using `collect()` or `reduce()`. (5 Marks)
+
+**Q2. Deep Dive into Parallel Streams (10 Marks)**
+Discuss the mechanics and performance implications of using Parallel Streams (`parallelStream()`) versus Sequential Streams (`stream()`).
+a) Describe the role of the ForkJoinPool in optimizing parallel stream processing. (4 Marks)
+b) Identify three specific scenarios where using a Parallel Stream is likely to improve performance significantly, and three scenarios where it could lead to performance degradation (Amdahl's Law implications). (6 Marks)
+
+**Q3. `map` vs. `flatMap` Differentiation (10 Marks)**
+Consider a stream of `User` objects, where each `User` object contains a list of `Skill` objects (`User.getSkills()`). You need a final stream containing *only* the individual `Skill` objects.
+a) Write the code using `map` and explain why it fails to meet the requirement. (4 Marks)
+b) Write the correct code using `flatMap` and explain precisely how `flatMap` resolves the structural issue. (6 Marks)
+
+**Q4. Custom Collector Implementation (10 Marks)**
+The standard `Collectors` class provides many useful utilities. However, imagine a requirement to aggregate a list of integers into a unique string representation (e.g., treating `{1, 2, 2, 3}` as "1, 2, 3").
+Describe the three abstract methods required to implement a custom `Collector<T, A, R>` (specifically, the accumulator, the combiner, and the finisher). Provide a conceptual breakdown of the role each method plays in the aggregation process.
+
+**Q5. Handling Empty or Null Streams (10 Marks)**
+When processing streams, robustness against empty inputs or null objects is critical.
+a) Explain the role of `Optional<T>` when working with functional interfaces (e.g., in `filter` predicates). (4 Marks)
+b) How can the stream pipeline be designed to gracefully handle a scenario where a specific intermediate operation might return an empty list, preventing the entire pipeline from failing or processing null data? (Hint: Discuss `Optional.map()` usage in combination with stream operations). (6 Marks)
+
+***
+
+# SECTION C - Coding Questions
+**(2 Questions $\times$ 15 Marks = 30 Marks)**
+
+**Q1. Grouping and Aggregation Challenge (15 Marks)**
+
+You are given a list of `Employee` objects. Each `Employee` has a department name (String) and a salary (double). Write a Java method using Streams that performs the following complex task:
+
+1. Group all employees by their department.
+2. For each department, calculate the *average* salary.
+3. Further, calculate the *maximum* salary found in that department.
+4. Return the result as a `Map<String, DepartmentStats>`, where `DepartmentStats` is a simple record/class holding the calculated average and maximum salary.
+
+**(Required Helper Class/Record):**
+```java
+record DepartmentStats(double averageSalary, double maxSalary) {}
+// Assume Employee class exists: record Employee(String department, double salary) {}
+```
+
+**Q2. Multi-Criteria Filtering and Transformation (15 Marks)**
+
+You are given a list of `Book` objects. Each `Book` has a title (String), publication year (int), and a genre (String). Write a Java method using Streams that implements the following logic:
+
+1. **Filter:** Only consider books published after the year 2000.
+2. **Filter:** Only consider books belonging to the genre "Fiction" or "Science Fiction".
+3. **Transformation:** Transform the resulting filtered stream of `Book` objects into a stream of `String` containing only the initial letter of the title (capitalized) and the last digit of the publication year (e.g., "D" for "Dune" published in 2317).
+4. **Reduction:** Use a final reduction operation to collect all these resulting strings into a single, comma-separated String, sorted alphabetically.
+
+**(Required Helper Class/Record):**
+```java
+record Book(String title, int publicationYear, String genre) {}
+```
+
+***
+***
+
+# SECTION D - Answer Key
+
+**(For Examiner Use Only)**
+
+## Section A - MCQs (20 Marks)
+
+| Q No. | Answer | Explanation Focus |
+| :---: | :----- | :--------------------------------------------------------- |
+| **Q1.** | **D** | Filters nulls first, then non-empty strings. The final `.filter(s -> !s.isEmpty())` ensures that if the original list contained empty strings (which are not `null`), they are successfully removed post-uppercase check. |
+| **Q2.** | **B** | `Collectors.teeing` takes two results (Count $\rightarrow N$, Average $\rightarrow A$). The lambda receives them as `(count, avg)` and must calculate `avg * count`. |
+| **Q3.** | **B** | While stream operations are generally efficient, boxing primitives (e.g., `int` $\rightarrow$ `Integer`) and unboxing repeatedly adds significant overhead, especially in tight loops or repeated intermediate steps. |
+| **Q4.** | **B** | To handle out-of-memory datasets, the stream source must be *lazy*. A database cursor or a custom `StreamSource` is necessary to read data records sequentially without loading the entire dataset into JVM heap memory. |
+| **Q5.** | **B** | `map` transforms one element into one element (or one object). `flatMap` takes an element that itself produces a stream/collection and flattens all those resulting streams into a single, unified stream. |
+
+## Section B - Theory Questions (50 Marks)
+
+**Q1. Side Effects:**
+*   **a) Why discouraged:** Streams are intended to be declarative and highly functional. Side effects violate referential transparency, meaning calling the operation multiple times might yield different results or perform hidden actions (like printing to console, or modifying external state), making code unpredictable and difficult to debug.
+*   **b) Example/Alternative:**
+    *   *Bad Example:* Using `forEach(s -> System.out.println(s))` (side effect: printing).
+    *   *Better Alternative:* If the goal is just to calculate a sum, use `reduce(0, Integer::sum)` or `collect(Collectors.summingInt(Integer::intValue))`. This keeps the process pure and focused on data transformation.
+
+**Q2. Parallel vs. Sequential Streams:**
+*   **a) ForkJoinPool:** It is a thread pool managed by the Java Runtime Environment, optimized for tasks that can be easily divided into smaller, independent subtasks (divide and conquer). It efficiently manages worker threads, minimizing overhead and ensuring optimal load balancing across multiple CPU cores.
+*   **b) Scenarios:**
+    *   *Improvement:* Large datasets with independent processing logic (e.g., filtering millions of records, performing independent mathematical calculations).
+    *   *Degradation:* Tasks with high synchronization overhead (locking/thread contention), or tasks that are inherently sequential (data dependency, i.e., processing a calculation step-by-step).
+
+**Q3. `map` vs. `flatMap`:**
+*   **a) `map` Failure:** The `map` operation is designed to transform an element $T$ into a single element $R$. If we apply `map(User::getSkills)`, the result is a `Stream<List<Skill>>`. The output stream contains lists, not individual skills.
+*   **b) `flatMap` Solution:** `flatMap` is required because the transformation function produces a *stream* (or collection). `flatMap` processes each `List<Skill>` and then "flattens" (concatenates) all these individual streams together into a single, uniform `Stream<Skill>`.
+
+**Q4. Custom Collector:**
+*   **Goal:** Aggregate a stream of `Integer` into a unique String (e.g., "1, 2, 3").
+*   **Accumulator (`A`):** `A` represents the mutable reduction container (the running result). This method takes the current container (`A`) and the next element (`T`) and modifies the container to incorporate the new element (e.g., appending the new number and a comma to the running string).
+*   **Combiner (`A`):** Used when running in parallel. It takes two independent, partially accumulated results (`A` and `A`) and merges them into a single container (`A`). This ensures that parallel threads can safely combine their partial results.
+*   **Finisher (`R`):** Converts the final, mutable container (`A`) into the final, immutable result type (`R`) required by the user (e.g., trimming the final comma from the internal string buffer).
+
+**Q5. Handling Empty/Null Streams:**
+*   **a) Optional Role:** `Optional<T>` is a container that may or may not hold a non-null value. It forces the developer to explicitly acknowledge the presence or absence of data, thereby making the code safer and reducing the risk of `NullPointerException`.
+*   **b) Graceful Handling:** The pipeline should use `Optional.map()` strategically. If an intermediate operation might return an `Optional` (or a structure containing it), mapping the result prevents the pipeline from continuing if the optional is empty. Example: Instead of `stream.map(findData()).filter(Optional::isPresent).map(Optional::get)...`, one might use `stream.flatMap(optionalData -> optionalData.map(value -> processedValue).stream())`.
+
+## Section C - Coding Questions (30 Marks)
+
+**Q1. Grouping and Aggregation Challenge (15 Marks)**
+
+*   **Expected Solution Structure:** Use `Collectors.groupingBy` combined with a downstream collector.
+*   **Key Concepts Tested:** Grouping, `averagingDouble`, `maxBy`, `Collectors.collectingAndThen` or `Collectors.teeing`.
+*   **Expected Result:** A `Map<String, DepartmentStats>` containing calculated average and max salaries for each department.
+
+**Q2. Multi-Criteria Filtering and Transformation (15 Marks)**
+
+*   **Expected Solution Structure:** Chaining multiple `filter` operations, followed by a `map` operation, and culminating in a `collect(Collectors.joining(","))` operation.
+*   **Key Concepts Tested:** Chained filtering, transformation, functional extraction of characters/digits, and terminal reduction (`joining`).
+*   **Expected Result:** A single sorted, comma-separated String (e.g., "D, S").
+
+***
+**End of Paper**
+    </pre>
+
+</body>
+</html>
