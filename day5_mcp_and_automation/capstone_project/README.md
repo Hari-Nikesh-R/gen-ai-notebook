@@ -12,195 +12,219 @@ The objective of this assignment is to encourage innovation, interdisciplinary t
 
 # Project List
 
-## 1. ExamCraft – Intelligent Question Paper Generator
+## 1. ExamCraft – Intelligent Study Quiz and Question Generator
 
-**Engineering Stream:** Computer Science Engineering (CSE)
+**Engineering Stream:** General / All Streams (Generic)
 **Primary AI Paradigm:** Agentic AI
-**Difficulty Level:** Beginner to Intermediate
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-ExamCraft is an AI-powered syllabus-to-question-paper generation system designed to automate the creation of academic examinations. The system analyzes syllabus content and generates structured question papers aligned with Bloom’s Taxonomy levels such as remembering, understanding, applying, and analyzing.
+ExamCraft is an AI-powered study assistant designed to automatically generate study materials, summary flashcards, and practice quiz questions from lecture notes or syllabus texts.
 
 ### Key Features
 
-* Automatic syllabus parsing
-* Bloom’s Taxonomy-based question generation
-* Multiple difficulty-level support
-* Subject-wise exam creation
-* Faculty time reduction in paper preparation
+* Automatic notes and syllabus parsing
+* Automated multiple-choice and short-answer question generation
+* Bloom's Taxonomy-aligned difficulty adjustment
+* Instant answer key and feedback generation
+* Study guide summary export support
 
 ### Expected Outcome
 
-Students should develop a prototype capable of generating meaningful academic assessments from syllabus input with minimal human intervention.
+Students should develop a prototype capable of generating meaningful academic assessments and practice flashcards from simple text input with minimal human intervention.
 
 ---
 
-## 2. LabGuide – CAD/CAM Safety and Design Auditor
+## 2. PrintBuddy – 3D Printing and Craft Quality Auditor
 
-**Engineering Stream:** Mechanical Engineering (MECH)
-**Primary AI Paradigm:** Model Context Protocol (MCP)
-**Difficulty Level:** Intermediate
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Agentic AI
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-LabGuide is an AI-assisted auditing system for CAD/CAM laboratories. The platform exposes G-code validation and design inspection tools through MCP-compatible environments such as Cursor or Claude to identify unsafe machining instructions and toolpath inconsistencies.
+PrintBuddy is an AI-assisted design checker that analyzes 3D printing STL configuration logs or basic dimensions to verify buildability, check safety margins, and warn creators about structural risks.
 
 ### Key Features
 
-* G-code parsing and analysis
-* Toolpath safety verification
-* CAD/CAM design auditing
-* Error detection in machining instructions
-* Automated feedback for lab submissions
+* Basic shape dimension and volume parsing
+* Structural balance and center of mass calculations
+* Automated detection of thin walls or overhang issues
+* Simple printing temperature and speed auditor
+* Automated maker troubleshooting tips
 
 ### Expected Outcome
 
-Students should create a system capable of evaluating machine instruction files and identifying possible safety risks or fabrication errors.
+Students should create an assistant capable of checking basic shapes and printing parameters to help makers avoid print failures.
 
 ---
 
-## 3. SurveySync – Geodesic Fieldwork Assessment Assistant
+## 3. RouteSync – Trajectory and Outdoor Activity Safety Auditor
 
-**Engineering Stream:** Civil Engineering
+**Engineering Stream:** General / All Streams (Generic)
 **Primary AI Paradigm:** Agentic AI & RAG
-**Difficulty Level:** Beginner to Intermediate
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-SurveySync is a fieldwork grading assistant designed for civil engineering survey laboratories. The system evaluates topographic and theodolite survey logs against verified reference datasets to identify errors and assign assessment scores automatically.
+RouteSync is a hiking and outdoor activity safety assistant that audits GPX route logs or itinerary coordinates against reference difficulty data to flag steep drops, safe elevations, and estimate duration.
 
 ### Key Features
 
-* Survey data analysis
-* Theodolite log verification
-* AI-based grading assistance
-* Reference database comparison
-* Automated error identification
+* GPS and elevation coordinate log parsing
+* Path difficulty and steepness auditing
+* Travel time and calorie burn predictions
+* Local safety reference comparisons (weather, safe zones)
+* Automated warnings for high-risk path segments
 
 ### Expected Outcome
 
-Students should build a grading support system capable of validating fieldwork records and generating performance evaluations.
+Students should build a safety auditor capable of evaluating route logs and generating helpful warning summaries for outdoor enthusiasts.
 
 ---
 
-## 4. SpectraGrad – Digital Circuit Evaluation System
+## 4. LogicValidator – Boolean and Code Logic Evaluator
 
-**Engineering Stream:** Electronics and Communication Engineering (ECE)
-**Primary AI Paradigm:** MCP & Local RAG
-**Difficulty Level:** Beginner to Intermediate
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Agentic AI
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-SpectraGrad is an AI-based digital electronics assessment system that evaluates truth tables, logic diagrams, and circuit behavior using MCP-connected validation tools and local retrieval systems.
+LogicValidator is an AI-assisted tool designed to evaluate basic boolean expressions, truth tables, and simple logic statements to find reasoning flaws and provide debugging explanations.
 
 ### Key Features
 
-* Logic gate validation
-* Truth-table verification
-* Circuit behavior analysis
-* Automated digital circuit grading
-* Local engineering knowledge retrieval
+* Boolean condition and statement parsing
+* Truth table verification and generation
+* Logical equivalence auditing
+* Detailed error explanation for reasoning bugs
+* Beginner-friendly logical simplification advice
 
 ### Expected Outcome
 
-Students should develop an intelligent evaluator capable of assessing digital circuit design submissions with accuracy and consistency.
+Students should develop an intelligent evaluator capable of validating simple logic expressions and generating step-by-step reasoning guides.
 
 ---
 
-## 5. PowerGrade – Practical Telemetry and Load Analysis Auditor
+## 5. EcoWatt – Household Utility and Carbon Footprint Auditor
 
-**Engineering Stream:** Electrical and Electronics Engineering (EEE)
-**Primary AI Paradigm:** Agentic AI & Data RAG
-**Difficulty Level:** Intermediate
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Agentic AI
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-PowerGrade is an AI-enabled telemetry auditing system that analyzes electrical motor load test data from CSV logs. The system identifies anomalies, fabricated readings, and inconsistent performance curves while generating evaluation summaries.
+EcoWatt is an AI-enabled household utility auditing assistant that parses home energy logs to identify consumption anomalies, calculate carbon footprint estimation, and suggest customized carbon savings tips.
 
 ### Key Features
 
-* CSV telemetry parsing
-* Motor load curve analysis
-* Detection of fabricated test data
-* Automated scoring and auditing
-* Performance visualization support
+* Home electricity utility log parsing (CSV files)
+* Daily and monthly consumption pattern detection
+* Detection of unexpected electricity draw anomalies
+* Basic carbon emissions calculator
+* Automated saving recommendations and green tips
 
 ### Expected Outcome
 
-Students should implement a practical analysis platform capable of validating laboratory telemetry datasets and identifying inconsistencies.
+Students should implement a simple analysis platform capable of validating utility records, identifying consumption spikes, and providing eco-friendly advice.
 
 ---
 
-## 6. PatchGuard – Code Plagiarism and Collusion Detector
+## 6. OriginCheck – Plagiarism and Citation Inconsistency Detector
 
-**Engineering Stream:** Information Technology (IT)
-**Primary AI Paradigm:** Model Context Protocol (MCP)
-**Difficulty Level:** Beginner to Intermediate
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Agentic AI
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-PatchGuard is an AI-assisted academic integrity tool designed to detect plagiarism and code collusion among student programming submissions. The system uses abstract syntax tree (AST) analysis and structural logic comparison techniques.
+OriginCheck is an AI-assisted academic integrity tool that evaluates student essay drafts and reports to flag structural similarities, potential plagiarism, and missing source citations.
 
 ### Key Features
 
-* Source-code similarity analysis
-* AST-based comparison
-* Structural logic matching
-* Detection of disguised plagiarism
-* Automated integrity reports
+* Simple document text formatting and parsing
+* Sentence-by-sentence similarity comparison
+* Inconsistent writing tone and voice auditor
+* Checker for missing or malformed citations
+* Automated authenticity feedback report generation
 
 ### Expected Outcome
 
-Students should design a system capable of identifying suspicious similarities in coding assignments beyond simple text matching.
+Students should design a simple integrity assistant capable of identifying text similarity and checking citation formats in school papers.
 
 ---
 
-## 7. PaperSift – Research Literature Mapping Tool
+## 7. StudySift – Text and Note Semantic Search Assistant
 
-**Engineering Stream:** Computer Science Engineering (CSE)
-**Primary AI Paradigm:** Advanced Local RAG
-**Difficulty Level:** Intermediate
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Local RAG
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-PaperSift is a research assistance tool that processes collections of academic papers and builds searchable literature maps using vector databases such as ChromaDB. The system helps researchers identify relationships, trends, and summaries across multiple publications.
+StudySift is a search and indexing tool designed to organize local folders of notes and textbooks into a searchable semantic knowledge base, enabling rapid question answering and study guide drafting.
 
 ### Key Features
 
-* PDF research paper ingestion
-* ChromaDB vector indexing
-* Literature review generation
-* Semantic paper search
-* Research topic mapping
+* Plain-text study document ingestion
+* Simple local keyword and vector indexing
+* Direct question answering from loaded notes
+* Auto-generated summary bullet points
+* Study guide synthesis and checklist builder
 
 ### Expected Outcome
 
-Students should create a local AI research assistant capable of organizing and summarizing academic literature efficiently.
+Students should build a local search companion capable of parsing learning documents and generating concise answers to student queries.
 
 ---
 
-## 8. GradeInsight – Student Performance Prediction System
+## 8. FocusFlow – Personal Productivity and Focus Predictor
 
-**Engineering Stream:** Artificial Intelligence & Data Science (AI&DS)
-**Primary AI Paradigm:** Advanced Local RAG
-**Difficulty Level:** Intermediate
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Local RAG
+**Difficulty Level:** Beginner
 
 ### Project Description
 
-GradeInsight is a predictive analytics platform that evaluates attendance records, internal assessment marks, and academic behavior to identify students at academic risk. The system also generates personalized intervention recommendations for faculty.
+FocusFlow is a predictive time-management and academic scheduling assistant that tracks daily study logs and focus levels to predict readiness for deadlines and offer customized productivity suggestions.
 
 ### Key Features
 
-* Academic data analysis
-* Grade prediction models
-* Risk detection system
-* Personalized intervention suggestions
-* Faculty advisory report generation
+* Simple study log and schedule ingestion
+* Preparation readiness and deadline risk estimation
+* Fatigue and focus time pattern detection
+* Custom study breaks and schedule advice
+* Detailed mentor and student productivity reports
 
 ### Expected Outcome
 
-Students should build a predictive AI system capable of supporting academic mentoring and early intervention strategies.
+Students should develop a scheduling tool capable of identifying studying habits, predicting time crunches, and suggesting micro-interventions.
+
+---
+
+## 9. CareerSync – AI-Powered Resume Tailoring and Skill Gap Analyzer
+
+**Engineering Stream:** General / All Streams (Generic)
+**Primary AI Paradigm:** Agentic AI
+**Difficulty Level:** Beginner
+
+### Project Description
+
+CareerSync is an AI-powered resume optimization assistant that compares a student's CV against a target job description to identify missing keywords, highlight skill gaps, and provide customized recommendations for tailoring their application.
+
+### Key Features
+
+* Raw resume text and job description parsing
+* Missing keyword and professional term identification
+* Skill gap analysis and recommended learning resources
+* Sentence-level rephrasing suggestions for high-impact achievements
+* Automated generation of tailored bullet points for CV sections
+
+### Expected Outcome
+
+Students should develop a prototype capable of processing a text-based resume and a job post to output an interactive checklist and an optimized layout of CV recommendations.
 
 ---
 

@@ -1,0 +1,159 @@
+{
+    "allocations": {
+        "Team Innovators": {
+            "id": 9,
+            "title": "CareerSync – AI-Powered Resume Tailoring and Skill Gap Analyzer",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Agentic AI",
+            "difficulty": "Beginner",
+            "description": "CareerSync is an AI-powered resume optimization assistant that compares a student's CV against a target job description to identify missing keywords, highlight skill gaps, and provide customized recommendations for tailoring their application.",
+            "features": [
+                "Raw resume text and job description parsing",
+                "Missing keyword and professional term identification",
+                "Skill gap analysis and recommended learning resources",
+                "Sentence-level rephrasing suggestions for high-impact achievements",
+                "Automated generation of tailored bullet points for CV sections"
+            ],
+            "outcome": "Students should develop a prototype capable of processing a text-based resume and a job post to output an interactive checklist and an optimized layout of CV recommendations."
+        },
+        "Team Rising Stars": {
+            "id": 1,
+            "title": "ExamCraft – Intelligent Study Quiz and Question Generator",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Agentic AI",
+            "difficulty": "Beginner",
+            "description": "ExamCraft is an AI-powered study assistant designed to automatically generate study materials, summary flashcards, and practice quiz questions from lecture notes or syllabus texts.",
+            "features": [
+                "Automatic notes and syllabus parsing",
+                "Automated multiple-choice and short-answer question generation",
+                "Bloom's Taxonomy-aligned difficulty adjustment",
+                "Instant answer key and feedback generation",
+                "Study guide summary export support"
+            ],
+            "outcome": "Students should develop a prototype capable of generating meaningful academic assessments and practice flashcards from simple text input with minimal human intervention."
+        },
+        "Team AI spark": {
+            "id": 3,
+            "title": "RouteSync – Trajectory and Outdoor Activity Safety Auditor",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Agentic AI & RAG",
+            "difficulty": "Beginner",
+            "description": "RouteSync is a hiking and outdoor activity safety assistant that audits GPX route logs or itinerary coordinates against reference difficulty data to flag steep drops, safe elevations, and estimate duration.",
+            "features": [
+                "GPS and elevation coordinate log parsing",
+                "Path difficulty and steepness auditing",
+                "Travel time and calorie burn predictions",
+                "Local safety reference comparisons (weather, safe zones)",
+                "Automated warnings for high-risk path segments"
+            ],
+            "outcome": "Students should build a safety auditor capable of evaluating route logs and generating helpful warning summaries for outdoor enthusiasts."
+        },
+        "Team Champions": {
+            "id": 6,
+            "title": "OriginCheck – Plagiarism and Citation Inconsistency Detector",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Agentic AI",
+            "difficulty": "Beginner",
+            "description": "OriginCheck is an AI-assisted academic integrity tool that evaluates student essay drafts and reports to flag structural similarities, potential plagiarism, and missing source citations.",
+            "features": [
+                "Simple document text formatting and parsing",
+                "Sentence-by-sentence similarity comparison",
+                "Inconsistent writing tone and voice auditor",
+                "Checker for missing or malformed citations",
+                "Automated authenticity feedback report generation"
+            ],
+            "outcome": "Students should design a simple integrity assistant capable of identifying text similarity and checking citation formats in school papers."
+        },
+        "Team Caterpillars": {
+            "id": 4,
+            "title": "LogicValidator – Boolean and Code Logic Evaluator",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Agentic AI",
+            "difficulty": "Beginner",
+            "description": "LogicValidator is an AI-assisted tool designed to evaluate basic boolean expressions, truth tables, and simple logic statements to find reasoning flaws and provide debugging explanations.",
+            "features": [
+                "Boolean condition and statement parsing",
+                "Truth table verification and generation",
+                "Logical equivalence auditing",
+                "Detailed error explanation for reasoning bugs",
+                "Beginner-friendly logical simplification advice"
+            ],
+            "outcome": "Students should develop an intelligent evaluator capable of validating simple logic expressions and generating step-by-step reasoning guides."
+        },
+        "Team 404 Error": {
+            "id": 5,
+            "title": "EcoWatt – Household Utility and Carbon Footprint Auditor",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Agentic AI",
+            "difficulty": "Beginner",
+            "description": "EcoWatt is an AI-enabled household utility auditing assistant that parses home energy logs to identify consumption anomalies, calculate carbon footprint estimation, and suggest customized carbon savings tips.",
+            "features": [
+                "Home electricity utility log parsing (CSV files)",
+                "Daily and monthly consumption pattern detection",
+                "Detection of unexpected electricity draw anomalies",
+                "Basic carbon emissions calculator",
+                "Automated saving recommendations and green tips"
+            ],
+            "outcome": "Students should implement a simple analysis platform capable of validating utility records, identifying consumption spikes, and providing eco-friendly advice."
+        },
+        "Team IT trends": {
+            "id": 7,
+            "title": "StudySift – Text and Note Semantic Search Assistant",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Local RAG",
+            "difficulty": "Beginner",
+            "description": "StudySift is a search and indexing tool designed to organize local folders of notes and textbooks into a searchable semantic knowledge base, enabling rapid question answering and study guide drafting.",
+            "features": [
+                "Plain-text study document ingestion",
+                "Simple local keyword and vector indexing",
+                "Direct question answering from loaded notes",
+                "Auto-generated summary bullet points",
+                "Study guide synthesis and checklist builder"
+            ],
+            "outcome": "Students should build a local search companion capable of parsing learning documents and generating concise answers to student queries."
+        },
+        "Team Technoverse": {
+            "id": 8,
+            "title": "FocusFlow – Personal Productivity and Focus Predictor",
+            "stream": "General / All Streams (Generic)",
+            "paradigm": "Local RAG",
+            "difficulty": "Beginner",
+            "description": "FocusFlow is a predictive time-management and academic scheduling assistant that tracks daily study logs and focus levels to predict readiness for deadlines and offer customized productivity suggestions.",
+            "features": [
+                "Simple study log and schedule ingestion",
+                "Preparation readiness and deadline risk estimation",
+                "Fatigue and focus time pattern detection",
+                "Custom study breaks and schedule advice",
+                "Detailed mentor and student productivity reports"
+            ],
+            "outcome": "Students should develop a scheduling tool capable of identifying studying habits, predicting time crunches, and suggesting micro-interventions."
+        }
+    },
+    "project_stats": {
+        "1": [
+            "Team Rising Stars"
+        ],
+        "2": [],
+        "3": [
+            "Team AI spark"
+        ],
+        "4": [
+            "Team Caterpillars"
+        ],
+        "5": [
+            "Team 404 Error"
+        ],
+        "6": [
+            "Team Champions"
+        ],
+        "7": [
+            "Team IT trends"
+        ],
+        "8": [
+            "Team Technoverse"
+        ],
+        "9": [
+            "Team Innovators"
+        ]
+    }
+}
